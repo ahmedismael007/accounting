@@ -19,7 +19,18 @@ class TaxRateController extends Controller
         $query = TaxRate::query();
         $data = $this->applyQuery($request, $query);
 
+        $translated_data= $this->translateActivities($data);
+
         return response()->json($data, 200);
+    }
+
+    private function translateActivities($tax_rates)
+    {
+        foreach ($tax_rates as &$tax_rate) {
+             $tax_rate['tax_type'] = trans("enum.{$tax_rate['tax_type']}") ?? $tax_rate['tax_type'];         
+        }
+
+        return $tax_rates;
     }
 
     /**

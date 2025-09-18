@@ -21,7 +21,23 @@ class AccountController extends Controller
         $query = Account::with('children')->whereNull('parent_id');
         $data = $this->applyQuery($request, $query);
 
-        return response()->json($data, 200);
+           $translatedData = $this->translateActivities($data);
+
+    return response()->json($translatedData, 200);
+    }
+
+    private function translateActivities($accounts)
+    {
+        foreach ($accounts as &$account) {
+            // Translate activity using the translation file
+            $account['activity'] = trans("enum.{$account['activity']}") ?? $account['activity'];
+
+            if (!empty($account['children'])) {
+                $account['children'] = $this->translateActivities($account['children']);
+            }
+        }
+
+        return $accounts;
     }
 
     /**
@@ -38,9 +54,8 @@ class AccountController extends Controller
 
         if (!empty($validated['is_bank']) && $validated['is_bank'] == true) {
             $bank_account = BankAccount::create([
-                'name_ar' => $validated['name_ar'],
-                'name_en' => $validated['name_en'],
-                'type'    => 'BANK_ACCOUNT',
+                'name' => $validated['name'],
+                 'type'    => 'BANK_ACCOUNT',
                 'currency' => 'SAR',
             ]);
 

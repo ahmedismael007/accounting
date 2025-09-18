@@ -17,7 +17,7 @@ class KafkaGenericConsumer
 {
     public function run(): void
     {
-        $consumer = Kafka::consumer()->subscribe([
+        $consumer = Kafka::consumer(groupId:'accounting_service')->subscribe([
             'user_created',
             'user_updated',
             'user_deleted',

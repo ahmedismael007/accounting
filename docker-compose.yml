@@ -47,7 +47,7 @@ services:
         build:
             context: .
             dockerfile: Dockerfile
-        container_name: kafka_consumer
+        container_name: kafka_consumer_accounting
         working_dir: /var/www
         volumes:
             - ./:/var/www

@@ -16,16 +16,18 @@ use App\Http\Controllers\Tenant\Accounting\Projects\ProjectController;
 use App\Http\Controllers\Tenant\Inventory\InventoryAdjustmentController;
 use App\Http\Controllers\Tenant\Inventory\ProductController;
 use App\Http\Controllers\Tenant\Inventory\WarehouseController;
+use App\Http\Middleware\InitializeTenantFromHeader;
+use App\Http\Middleware\SetLocaleFromHeader;
 use Illuminate\Support\Facades\Route;
-use Stancl\Tenancy\Middleware\InitializeTenancyByRequestData;
 
-Route::prefix('api/v1')->middleware(\App\Http\Middleware\InitializeTenantFromHeader::class)->group(function () {
+Route::prefix('api/v1')->middleware([InitializeTenantFromHeader::class, SetLocaleFromHeader::class])->group(function () {
     // Organization
     Route::apiResource('tenants', TenantController::class);
     Route::post('tenants/logo', [TenantController::class, 'update_logo']);
     Route::get('user-tenants', [UserController::class, 'user_tenants']);
 
     // Accounting
+    Route::delete('chart-of-accounts', [AccountController::class, 'destroy']);
     Route::apiResource('chart-of-accounts', AccountController::class);
     Route::apiResource('tax-rates', TaxRateController::class);
     Route::apiResource('branches', BranchController::class);

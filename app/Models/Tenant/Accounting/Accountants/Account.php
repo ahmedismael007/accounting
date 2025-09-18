@@ -44,4 +44,12 @@ class Account extends Model
     {
         return $this->hasMany(JournalLineItem::class);
     }
+
+    protected $casts = [
+        'name' => 'array',  
+        'show_in_expense_claims' => 'boolean',
+        'is_locked' => 'boolean',
+        'is_system' => 'boolean',
+        'is_payment_enabled' => 'boolean',
+    ];
 }

@@ -45,8 +45,8 @@ class WarehouseController extends Controller
                 'name_ar' => $warehouse['name'],
                 'name_en' => $warehouse['name'],
                 'activity' => 'OPERATING',
-                'parent_id' => 115,
-                'children' => [],
+                'parent_id' => 115, //
+                'children' => [], //
                 'show_in_expense_claims' => false,
                 'bank_account_id' => null,
                 'is_locked' => true,
