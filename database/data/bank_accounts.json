@@ -1,0 +1,26 @@
+[
+    {
+        "name": {
+            "ar": "الحساب البنكي",
+            "en": "Bank Account"
+        },
+        "type": "BANK_ACCOUNT",
+        "currency": "SAR"
+    },
+    {
+        "name": {
+            "ar": "المصروفات النثرية",
+            "en": "Petty Cash"
+        },
+        "type": "PETTY_CASH",
+        "currency": "SAR"
+    },
+    {
+        "name": {
+            "ar": "الخزينة",
+            "en": "Undeposited Funds"
+        },
+        "type": "PETTY_CASH",
+        "currency": "SAR"
+    }
+]
