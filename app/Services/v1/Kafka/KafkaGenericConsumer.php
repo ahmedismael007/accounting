@@ -40,8 +40,8 @@ class KafkaGenericConsumer
                 }
 
                 switch ($topic) {
-                    case 'user_created':
-                        Event::dispatch(new UserCreated($payload));
+                    case 'user_created':                        
+                        Event::dispatch(new UserCreated($payload, $tenantId));
                         break;
 
                     case 'user_updated':

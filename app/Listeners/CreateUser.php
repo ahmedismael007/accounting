@@ -3,6 +3,8 @@
 namespace App\Listeners;
 
 use App\Events\UserCreated;
+use App\Models\Tenant\User\User;
+use Illuminate\Support\Facades\Log;
 
 class CreateUser
 {
@@ -19,6 +21,15 @@ class CreateUser
      */
     public function handle(UserCreated $event): void
     {
-        //
+        $tenantId = $event->tenantId; 
+        $userData = $event->userData;
+
+        if($tenantId) {
+            tenancy()->initialize($tenantId);
+        }
+
+        User::create($userData);
+
+        Log::alert('success');
     }
 }

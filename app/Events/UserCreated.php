@@ -11,14 +11,16 @@ class UserCreated
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
-    public array $data;
+    public array $userData;
+    public string $tenantId;
 
     /**
      * Create a new event instance.
      */
-    public function __construct(array $data)
+    public function __construct(array $userData, ?string $tenantId)
     {
-        $this->data = $data;
+        $this->userData = $userData;
+        $this->tenantId = $tenantId;
     }
 
     /**

@@ -3,8 +3,10 @@
 namespace App\Listeners;
 
 use App\Events\TenantCreated;
+use App\Events\UserCreated;
 use App\Models\Central\Tenant\Tenant;
 use App\Models\Tenant\User\User;
+use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Log;
 
 class CreateTenant
@@ -14,14 +16,12 @@ class CreateTenant
         $data = $event->data;
         $userData = $data['user'];
         $tenantData = $data['tenant'];
+        $tenantId = $tenantData['id'];
 
         // Create tenant in central DB
         $tenantModel = Tenant::create($tenantData);
 
-        // Initialize tenant context
-        tenancy()->initialize($tenantModel);
+        Event::dispatch(new UserCreated($userData, $tenantId));
 
-        // Create user in tenant DB
-        User::create($userData);
-    }
+     }
 }

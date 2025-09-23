@@ -3449,16 +3449,16 @@
         },
         {
             "name": "nnjeim/world",
-            "version": "1.1.35",
+            "version": "1.1.36",
             "source": {
                 "type": "git",
                 "url": "https://github.com/nnjeim/world.git",
-                "reference": "4b21654da9e6e89ed237f26dc8ae49b7aeac5309"
+                "reference": "8fa772544024f40ca0d92e333314c21041d81ec4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nnjeim/world/zipball/4b21654da9e6e89ed237f26dc8ae49b7aeac5309",
-                "reference": "4b21654da9e6e89ed237f26dc8ae49b7aeac5309",
+                "url": "https://api.github.com/repos/nnjeim/world/zipball/8fa772544024f40ca0d92e333314c21041d81ec4",
+                "reference": "8fa772544024f40ca0d92e333314c21041d81ec4",
                 "shasum": ""
             },
             "require": {
@@ -3509,9 +3509,9 @@
             ],
             "support": {
                 "issues": "https://github.com/nnjeim/world/issues",
-                "source": "https://github.com/nnjeim/world/tree/1.1.35"
+                "source": "https://github.com/nnjeim/world/tree/1.1.36"
             },
-            "time": "2025-05-14T10:36:36+00:00"
+            "time": "2025-08-21T03:36:01+00:00"
         },
         {
             "name": "nunomaduro/termwind",
