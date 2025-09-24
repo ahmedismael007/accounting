@@ -20,7 +20,7 @@ class CreateTenant
 
         // Create tenant in central DB
         $tenantModel = Tenant::create($tenantData);
-
+ 
         Event::dispatch(new UserCreated($userData, $tenantId));
 
      }

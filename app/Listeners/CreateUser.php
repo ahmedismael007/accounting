@@ -28,8 +28,7 @@ class CreateUser
             tenancy()->initialize($tenantId);
         }
 
-        User::create($userData);
+        $user = User::create($userData);
 
-        Log::alert('success');
-    }
+     }
 }
