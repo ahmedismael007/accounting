@@ -22,7 +22,8 @@ class CostCenterRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => 'required|string|max:255'
+            'name' => 'array|required',
+            'name.*' => 'string|max:255'
         ];
     }
 }

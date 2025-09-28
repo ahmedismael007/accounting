@@ -10,6 +10,10 @@ class CostCenter extends Model
 {
     protected $fillable = ['name'];
 
+    protected $casts = [
+        'name' => 'array'
+    ];
+
     public function journal_line_items(): HasMany
     {
         return $this->hasMany(JournalLineItem::class);
