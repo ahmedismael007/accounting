@@ -5,8 +5,8 @@ namespace App\Http\Controllers\Tenant\Accounting\Accountants;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Tenant\Accounting\Accountants\JournalRequest;
 use App\Models\Tenant\Accounting\Accountants\Journal;
-use App\Services\v1\PdfService;
-use App\Services\v1\ReferenceValueFormatterService;
+use App\Services\V1\PdfService;
+use App\Services\V1\ReferenceValueFormatterService;
 use App\Traits\QueryBuilder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -15,6 +15,7 @@ use Illuminate\Support\Facades\DB;
 class JournalController extends Controller
 {
     use QueryBuilder;
+
     /**
      * Display a listing of the resource.
      */
@@ -45,22 +46,22 @@ class JournalController extends Controller
 
             $lineItems = collect($request->journal_line_items)->map(function ($item) use ($user_with_email, $journal) {
                 return [
-                    'user'           => $user_with_email,
-                    'account_id'     => $item['account_id'],
-                    'description'    => $item['description'],
-                    'currency'       => $item['currency'],
-                    'exchange_rate'  => $item['exchange_rate'] ?? 1,
-                    'debit'          => $item['debit'],
-                    'credit'         => $item['credit'],
-                    'debit_dc'       => $item['debit_dc'],
-                    'credit_dc'      => $item['credit_dc'],
-                    'tax_rate_id'       => $item['tax_rate_id'] ?? 0,
-                    'contact_id'     => $item['contact_id'] ?? null,
-                    'project_id'     => $item['project_id'] ?? null,
-                    'branch_id'      => $item['branch_id'] ?? null,
+                    'user' => $user_with_email,
+                    'account_id' => $item['account_id'],
+                    'description' => $item['description'],
+                    'currency' => $item['currency'],
+                    'exchange_rate' => $item['exchange_rate'] ?? 1,
+                    'debit' => $item['debit'],
+                    'credit' => $item['credit'],
+                    'debit_dc' => $item['debit_dc'],
+                    'credit_dc' => $item['credit_dc'],
+                    'tax_rate_id' => $item['tax_rate_id'] ?? 0,
+                    'contact_id' => $item['contact_id'] ?? null,
+                    'project_id' => $item['project_id'] ?? null,
+                    'branch_id' => $item['branch_id'] ?? null,
                     'cost_center_id' => $item['cost_center_id'] ?? null,
-                    'source_type'    => 'قيد يدوي',
-                    'source_id'      => $journal['id'],
+                    'source_type' => 'قيد يدوي',
+                    'source_id' => $journal['id'],
                 ];
             });
 
@@ -131,22 +132,22 @@ class JournalController extends Controller
 
             $lineItems = collect($request->journal_line_items)->map(function ($item) use ($user_with_email, $journal) {
                 return [
-                    'user'           => $user_with_email,
-                    'account_id'     => $item['account_id'],
-                    'description'    => $item['description'],
-                    'currency'       => $item['currency'],
-                    'exchange_rate'  => $item['exchange_rate'] ?? 1,
-                    'debit'          => $item['debit'],
-                    'credit'         => $item['credit'],
-                    'debit_dc'       => $item['debit_dc'],
-                    'credit_dc'      => $item['credit_dc'],
-                    'tax_rate_id'       => $item['tax_rate_id'] ?? 0,
-                    'contact_id'     => $item['contact_id'] ?? null,
-                    'project_id'     => $item['project_id'] ?? null,
-                    'branch_id'      => $item['branch_id'] ?? null,
+                    'user' => $user_with_email,
+                    'account_id' => $item['account_id'],
+                    'description' => $item['description'],
+                    'currency' => $item['currency'],
+                    'exchange_rate' => $item['exchange_rate'] ?? 1,
+                    'debit' => $item['debit'],
+                    'credit' => $item['credit'],
+                    'debit_dc' => $item['debit_dc'],
+                    'credit_dc' => $item['credit_dc'],
+                    'tax_rate_id' => $item['tax_rate_id'] ?? 0,
+                    'contact_id' => $item['contact_id'] ?? null,
+                    'project_id' => $item['project_id'] ?? null,
+                    'branch_id' => $item['branch_id'] ?? null,
                     'cost_center_id' => $item['cost_center_id'] ?? null,
-                    'source_type'    => 'قيد يدوي',
-                    'source_id'      => $journal->id,
+                    'source_type' => 'قيد يدوي',
+                    'source_id' => $journal->id,
                 ];
             });
 

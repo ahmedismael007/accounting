@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Services\v1;
+namespace App\Services\V1;
 
 use App\Enums\CountryType;
 use App\Enums\CurrencyType;
@@ -26,9 +26,9 @@ class ReferenceValueFormatterService
     {
         return match ($key) {
             'currency' => $this->getCurrencyLabel($value),
-            'country'  => $this->getCountryLabel($value),
-            'account_id'  => $this->getAccountName($value),
-            default    => $value,
+            'country' => $this->getCountryLabel($value),
+            'account_id' => $this->getAccountName($value),
+            default => $value,
         };
     }
 
@@ -46,7 +46,7 @@ class ReferenceValueFormatterService
 
     protected function getAccountName(?int $accountId): ?string
     {
-        if (! $accountId) {
+        if (!$accountId) {
             return null;
         }
 

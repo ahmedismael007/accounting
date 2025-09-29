@@ -12,13 +12,13 @@ trait QueryBuilder
         $filters = $request->input('filters', []);
         $sortBy = $request->input('sort_by', 'id');
         $sortDir = $request->input('sort_dir', 'desc');
-        $perPage = $request->input('per_page', 100);
+        $perPage = min((int)$request->input('per_page', 100), 500);
 
         // Get only allowed columns (fillable)
         $model = $query->getModel();
         $allowedColumns = array_merge($model->getFillable(), ['created_at']);
 
-        // 🔍 Search any column
+        // Search any column
         if ($search) {
             $query->where(function ($q) use ($search, $allowedColumns) {
                 foreach ($allowedColumns as $column) {
@@ -27,7 +27,7 @@ trait QueryBuilder
             });
         }
 
-        // 🧮 Filtering
+        // Filtering
         foreach ($filters as $column => $condition) {
             if (!in_array($column, $allowedColumns)) {
                 abort(422, "Filtering by column [$column] is not allowed.");
@@ -98,7 +98,7 @@ trait QueryBuilder
         }
 
 
-        // 📊 Sorting
+        // Sorting
         $sortBy = in_array($sortBy, ['id', 'created_at']) ? 'created_at' : $sortBy;
 
         if (!in_array($sortBy, $allowedColumns)) {
@@ -107,7 +107,7 @@ trait QueryBuilder
 
         $query->orderBy($sortBy, $sortDir);
 
-        // 📄 Paginate
+        // Paginate
         return $query->paginate($perPage);
     }
 }

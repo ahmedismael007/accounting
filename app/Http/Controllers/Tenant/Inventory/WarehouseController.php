@@ -6,7 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Tenant\Inventory\WarehouseRequest;
 use App\Models\Tenant\Accounting\Accountants\Account;
 use App\Models\Tenant\Inventory\Warehouse;
-use App\Services\v1\AccountCodeGeneratorService;
+use App\Services\V1\AccountCodeGeneratorService;
 use App\Traits\QueryBuilder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\DB;
 class WarehouseController extends Controller
 {
     use QueryBuilder;
+
     /**
      * Display a listing of the resource.
      */
@@ -73,17 +74,6 @@ class WarehouseController extends Controller
         }
     }
 
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        $warehouse = Warehouse::findOrFail($id);
-
-        return response()->json(['data' => $warehouse], 200);
-    }
-
     /**
      * Update the specified resource in storage.
      */
@@ -111,6 +101,16 @@ class WarehouseController extends Controller
 
             return response()->json(['message' => 'حدث خطأ أثناء التعديل'], 422);
         }
+    }
+
+    /**
+     * Display the specified resource.
+     */
+    public function show(string $id)
+    {
+        $warehouse = Warehouse::findOrFail($id);
+
+        return response()->json(['data' => $warehouse], 200);
     }
 
     /**

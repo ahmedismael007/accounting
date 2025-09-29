@@ -26,22 +26,16 @@ class TenantController extends Controller
 
     public function store(TenantRequest $request)
     {
-        $domain = $request->input('domain');
-
-        if (Domain::where('domain', $domain)->exists()) {
-            return response()->json(['message' => trans('tenant.domain_used')], 409);
-        };
 
         $response = null;
 
         $user = Auth::user();
 
         $tenant = Tenant::create($request->validated());
-        $tenant->domains()->create(['domain' => $domain]);
 
         $tenant->users()->attach($user->id, ['is_owner' => true]);
 
-        $tenant->run(function () use ($user, $domain, $tenant, &$response) {
+        $tenant->run(function () use ($user, $tenant, &$response) {
             $tenant_user = TenantUser::create(
                 [
                     'id' => $user->id,
@@ -55,7 +49,6 @@ class TenantController extends Controller
 
             $response = response()->json([
                 'message' => 'تم إنشاء المؤسسة بنجاح.',
-                'domain' => $domain,
                 'tenant_id' => $tenant->id
             ], 201);
         });

@@ -31,10 +31,10 @@ Route::prefix('api/v1')->middleware([InitializeTenantFromHeader::class, SetLocal
     Route::apiResource('chart-of-accounts', AccountController::class);
     Route::apiResource('tax-rates', TaxRateController::class);
     Route::apiResource('branches', BranchController::class);
-    Route::apiResource('cost-centers', CostCenterController::class);
     Route::apiResource('projects', ProjectController::class);
-    Route::apiResource('fixed-assets', FixedAssetController::class);
     Route::apiResource('bank-accounts', BankAccountController::class);
+    Route::apiResource('cost-centers', CostCenterController::class);
+    Route::apiResource('fixed-assets', FixedAssetController::class);
     Route::apiResource('contacts', ContactController::class);
     Route::apiResource('journals', JournalController::class);
 
@@ -42,4 +42,7 @@ Route::prefix('api/v1')->middleware([InitializeTenantFromHeader::class, SetLocal
     Route::apiResource('products', ProductController::class);
     Route::apiResource('adjustments', InventoryAdjustmentController::class);
     Route::apiResource('warehouses', WarehouseController::class);
+
+    // Payroll
+
 });

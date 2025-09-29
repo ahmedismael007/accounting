@@ -6,7 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Tenant\Accounting\BankAccounts\BankAccountRequest;
 use App\Models\Tenant\Accounting\Accountants\Account;
 use App\Models\Tenant\Accounting\BankAccounts\BankAccount;
-use App\Services\v1\AccountCodeGeneratorService;
+use App\Services\V1\AccountCodeGeneratorService;
 use Illuminate\Http\Request;
 
 class BankAccountController extends Controller

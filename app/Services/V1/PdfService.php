@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Services\v1;
+namespace App\Services\V1;
 
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
@@ -10,13 +10,14 @@ use Spatie\MediaLibrary\HasMedia;
 class PdfService
 {
     public function generate_PDF(
-        string $view,
-        array $data,
-        string $file_type,
-        string $id,
+        string    $view,
+        array     $data,
+        string    $file_type,
+        string    $id,
         ?HasMedia $model = null,
-        string $collection
-    ): void {
+        string    $collection
+    ): void
+    {
         try {
             $mpdf = new Mpdf([
                 'mode' => 'utf-8',
@@ -67,7 +68,7 @@ class PdfService
     public function generate_file_name(string $company_name, string $file_type, string $id)
     {
         $timestamp = now()->format('Ymd_His');
-        $file_name =  $company_name . '_' . $file_type . '_' . $id . $timestamp . '.pdf';
+        $file_name = $company_name . '_' . $file_type . '_' . $id . $timestamp . '.pdf';
 
         return $file_name;
     }

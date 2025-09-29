@@ -3,7 +3,7 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
-use App\Services\v1\Kafka\KafkaGenericConsumer;
+use App\Services\V1\Kafka\KafkaGenericConsumer;
 
 class KafkaGenericConsumerCommand extends Command
 {

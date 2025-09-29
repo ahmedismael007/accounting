@@ -6,38 +6,24 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Tenant\Accounting\Accountants\AccountRequest;
 use App\Models\Tenant\Accounting\Accountants\Account;
 use App\Models\Tenant\Accounting\BankAccounts\BankAccount;
-use App\Services\v1\AccountCodeGeneratorService;
+use App\Services\V1\AccountCodeGeneratorService;
 use App\Traits\QueryBuilder;
 use Illuminate\Http\Request;
 
 class AccountController extends Controller
 {
     use QueryBuilder;
+
     /**
      * Display a listing of the resource.
      */
     public function index(Request $request)
     {
         $query = Account::with('children')->whereNull('parent_id');
+
         $data = $this->applyQuery($request, $query);
 
-           $translatedData = $this->translateActivities($data);
-
-    return response()->json($translatedData, 200);
-    }
-
-    private function translateActivities($accounts)
-    {
-        foreach ($accounts as &$account) {
-            // Translate activity using the translation file
-            $account['activity'] = trans("enum.{$account['activity']}") ?? $account['activity'];
-
-            if (!empty($account['children'])) {
-                $account['children'] = $this->translateActivities($account['children']);
-            }
-        }
-
-        return $accounts;
+        return response()->json($data, 200);
     }
 
     /**
@@ -48,14 +34,13 @@ class AccountController extends Controller
         $validated = $request->validated();
 
         $account_code = $code_generator->generate($validated['parent_id']);
+        
         $validated['account_code'] = $account_code;
-
-        $bank_account = null;
 
         if (!empty($validated['is_bank']) && $validated['is_bank'] == true) {
             $bank_account = BankAccount::create([
                 'name' => $validated['name'],
-                 'type'    => 'BANK_ACCOUNT',
+                'type' => 'BANK_ACCOUNT',
                 'currency' => 'SAR',
             ]);
 
@@ -66,8 +51,6 @@ class AccountController extends Controller
 
         return response()->json(['message' => 'تم إضافة الحساب بنجاح.'], 201);
     }
-
-
 
     /**
      * Display the specified resource.
@@ -112,8 +95,6 @@ class AccountController extends Controller
         return response()->json(['message' => 'تم تعديل بيانات الحساب بنجاح.'], 200);
     }
 
-
-
     /**
      * Remove the specified resource from storage.
      */
@@ -140,5 +121,19 @@ class AccountController extends Controller
         Account::destroy($ids);
 
         return response()->json(['message' => 'تم حذف الحساب بنجاح.']);
+    }
+
+    private function translateActivities($accounts)
+    {
+        foreach ($accounts as &$account) {
+            // Translate activity using the translation file
+            $account['activity'] = trans("enum.{$account['activity']}") ?? $account['activity'];
+
+            if (!empty($account['children'])) {
+                $account['children'] = $this->translateActivities($account['children']);
+            }
+        }
+
+        return $accounts;
     }
 }

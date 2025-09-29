@@ -11,6 +11,7 @@ use Illuminate\Http\Request;
 class FixedAssetController extends Controller
 {
     use QueryBuilder;
+
     /**
      * Display a listing of the resource.
      */
@@ -74,3 +75,5 @@ class FixedAssetController extends Controller
         return response()->json(['message' => 'تم حذف الأصل بنجاح.']);
     }
 }
+
+

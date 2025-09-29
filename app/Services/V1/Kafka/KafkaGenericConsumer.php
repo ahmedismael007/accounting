@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Services\v1\Kafka;
+namespace App\Services\V1\Kafka;
 
 use App\Events\TenantCreated;
 use App\Events\TenantDeleted;
@@ -17,7 +17,7 @@ class KafkaGenericConsumer
 {
     public function run(): void
     {
-        $consumer = Kafka::consumer(groupId:'accounting_service')->subscribe([
+        $consumer = Kafka::consumer(groupId: 'accounting_service')->subscribe([
             'user_created',
             'user_updated',
             'user_deleted',
@@ -27,9 +27,9 @@ class KafkaGenericConsumer
         ]);
 
         $consumer->withHandler(function (ConsumerMessage $message) {
-            $topic   = $message->getTopicName();
+            $topic = $message->getTopicName();
             $headers = $message->getHeaders();
-            $payload = (array) $message->getBody();
+            $payload = (array)$message->getBody();
 
             $tenantId = $headers['X-Tenant'] ?? null;
 
@@ -40,7 +40,7 @@ class KafkaGenericConsumer
                 }
 
                 switch ($topic) {
-                    case 'user_created':                        
+                    case 'user_created':
                         Event::dispatch(new UserCreated($payload, $tenantId));
                         break;
 

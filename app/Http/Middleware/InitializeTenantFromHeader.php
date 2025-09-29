@@ -16,7 +16,8 @@ class InitializeTenantFromHeader
      */
     public function handle(Request $request, Closure $next): Response
     {
-        $tenantId = $request->header('X-Tenant');
+//        $tenantId = $request->header('X-Tenant');
+        $tenantId = '019995aa-1d30-70bc-bfca-4d8483a67a79';
 
         if ($tenantId) {
             try {
