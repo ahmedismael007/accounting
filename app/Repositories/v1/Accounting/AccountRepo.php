@@ -38,7 +38,8 @@ class AccountRepo
         return Account::with('children')->whereNull('parent_id')->findOrFail($id);
     }
 
-    public function destroy()
+    public function destroy(array $ids)
     {
+        return Account::destroy($ids);
     }
 }

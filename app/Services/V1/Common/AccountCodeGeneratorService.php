@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Services\V1;
+namespace App\Services\V1\Common;
 
 use App\Models\Tenant\Accounting\Accountants\Account;
 use Illuminate\Support\Str;

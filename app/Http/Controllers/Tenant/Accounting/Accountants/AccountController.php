@@ -6,7 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Tenant\Accounting\Accountants\AccountRequest;
 use App\Models\Tenant\Accounting\Accountants\Account;
 use App\Models\Tenant\Accounting\BankAccounts\BankAccount;
-use App\Services\V1\AccountCodeGeneratorService;
+use App\Services\V1\Common\AccountCodeGeneratorService;
 use App\Traits\QueryBuilder;
 use Illuminate\Http\Request;
 
@@ -34,7 +34,7 @@ class AccountController extends Controller
         $validated = $request->validated();
 
         $account_code = $code_generator->generate($validated['parent_id']);
-        
+
         $validated['account_code'] = $account_code;
 
         if (!empty($validated['is_bank']) && $validated['is_bank'] == true) {
