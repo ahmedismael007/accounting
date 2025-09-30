@@ -7,24 +7,26 @@ use App\Repositories\v1\Accounting\AccountRepo;
 use App\Services\V1\Common\AccountCodeGeneratorService;
 use App\Services\V1\Common\QueryBuilderService;
 use Illuminate\Http\Request;
+use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Database\Eloquent\Model;
 
 class AccountService
 {
-    /**
-     * Create a new class instance.
-     */
-    public function __construct(protected AccountRepo $repo, protected QueryBuilderService $queryBuilderService, protected AccountCodeGeneratorService $codeGenerator)
+    public function __construct(
+        protected AccountRepo                 $repo,
+        protected QueryBuilderService         $queryBuilderService,
+        protected AccountCodeGeneratorService $codeGenerator
+    )
     {
     }
 
-    public function index(Request $request)
+    public function index(Request $request): Collection
     {
-        $query = $this->repo->index;
-
-        return $this->queryBuilderService->applyQuery($request, $query);
+        $query = $this->repo->index();
+        return $this->queryBuilderService->applyQuery($request, $query)->get();
     }
 
-    public function store(array $data)
+    public function store(array $data): Model
     {
         $data['account_code'] = $this->codeGenerator->generate($data['parent_id'] ?? null);
 
@@ -41,41 +43,40 @@ class AccountService
         return $this->repo->store($data);
     }
 
-    public function update($id, array $data)
+    public function update($id, array $data): ?Model
     {
         $account = $this->repo->show($id);
 
-        if (!$account) {
-            return ['status' => false, 'code' => 404, 'message' => 'Account not found.'];
-        }
-
-        if ($account->is_system) {
-            return ['status' => false, 'code' => 422, 'message' => trans('accounting.account_not_editable')];
+        if (!$account || $account->is_system) {
+            return null;
         }
 
         if (isset($data['parent_id']) && $data['parent_id'] != $account->parent_id) {
             $data['account_code'] = $this->codeGenerator->generate($data['parent_id']);
         }
 
-        $this->repo->update($account, $data);
-
         if ($account->bank_account_id) {
             BankAccount::where('id', $account->bank_account_id)->update([
-                'name_ar' => $account['name_ar'],
-                'name_en' => $account['name_en'],
+                'name_ar' => $data['name_ar'] ?? $account->name_ar,
+                'name_en' => $data['name_en'] ?? $account->name_en,
             ]);
         }
 
-        return ['status' => true, 'code' => 200, 'message' => 'تم تعديل بيانات الحساب بنجاح.'];
+        return $this->repo->update($id, $data);
     }
 
-    public function destroy(array $ids)
+    public function show($id): ?Model
+    {
+        return $this->repo->show($id);
+    }
+
+    public function destroy(array $ids): bool
     {
         foreach ($ids as $id) {
-            $account = $this->repo->findOrFail($id);
+            $account = $this->repo->show($id);
 
             if ($account->is_system) {
-                return ['status' => false, 'code' => 422, 'message' => trans('accounting.account_not_deletable')];
+                return false;
             }
 
             if ($account->bank_account_id) {
@@ -83,10 +84,6 @@ class AccountService
             }
         }
 
-        $this->repo->destroy($ids);
-
-        return ['status' => true, 'code' => 200, 'message' => 'تم حذف الحساب بنجاح.'];
+        return $this->repo->destroy($ids);
     }
-
 }
-
