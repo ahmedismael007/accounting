@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Repositories\v1\Accounting;
+namespace App\Repositories\V1\Accounting;
 
 use App\Models\Tenant\Accounting\Accountants\Account;
 
@@ -35,7 +35,7 @@ class AccountRepo
 
     public function show(string $id)
     {
-        return Account::with('children')->whereNull('parent_id')->findOrFail($id);
+        return Account::with('children')->findOrFail($id);
     }
 
     public function destroy(array $ids)

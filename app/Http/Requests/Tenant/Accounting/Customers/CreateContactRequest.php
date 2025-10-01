@@ -4,7 +4,7 @@ namespace App\Http\Requests\Tenant\Accounting\Customers;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class ContactRequest extends FormRequest
+class CreateContactRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -23,16 +23,16 @@ class ContactRequest extends FormRequest
     {
         return [
             'name' => ['required', 'string', 'max:255'],
-            'phone' => ['nullable', 'string', 'max:255'],
-            'email' => ['nullable', 'string', 'max:255'],
-            'country' => ['nullable', 'string', 'max:255'],
+            'phone' => ['sometimes', 'string', 'max:255'],
+            'email' => ['sometimes', 'string', 'max:255'],
+            'country' => ['sometimes', 'string', 'max:255'],
             'is_vat_registered' => ['required', 'boolean'],
-            'tax_number' => ['nullable', 'string', 'max:255'],
-            'building_number' => ['nullable', 'string', 'max:255'],
-            'street' => ['nullable', 'string', 'max:255'],
-            'district' => ['nullable', 'string', 'max:255'],
-            'city' => ['nullable', 'string', 'max:255'],
-            'postal_code' => ['nullable', 'string', 'max:255'],
+            'tax_number' => ['sometimes', 'string', 'max:255'],
+            'building_number' => ['sometimes', 'string', 'max:255'],
+            'street' => ['sometimes', 'string', 'max:255'],
+            'district' => ['sometimes', 'string', 'max:255'],
+            'city' => ['sometimes', 'string', 'max:255'],
+            'postal_code' => ['sometimes', 'string', 'max:255'],
         ];
     }
 }

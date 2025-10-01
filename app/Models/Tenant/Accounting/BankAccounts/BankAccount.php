@@ -9,8 +9,7 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 class BankAccount extends Model
 {
     protected $fillable = [
-        'name_ar',
-        'name_en',
+        'name',
         'type',
         'currency',
     ];
@@ -19,4 +18,8 @@ class BankAccount extends Model
     {
         return $this->hasOne(Account::class);
     }
+
+    protected $casts = [
+        'name' => 'array',
+    ];
 }

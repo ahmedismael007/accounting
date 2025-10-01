@@ -10,8 +10,7 @@ class Branch extends Model
 {
 
     protected $fillable = [
-        'name_ar',
-        'name_en',
+        'name',
         'phone',
         'commercial_number',
         'building_number',
@@ -25,4 +24,8 @@ class Branch extends Model
     {
         return $this->hasMany(JournalLineItem::class);
     }
+
+    protected $casts = [
+        'name' => 'array'
+    ];
 }

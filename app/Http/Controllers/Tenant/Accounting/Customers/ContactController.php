@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Tenant\Accounting\Customers;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Tenant\Accounting\Customers\ContactRequest;
+use App\Http\Requests\Tenant\Accounting\Customers\CreateContactRequest;
 use App\Models\Tenant\Accounting\Customers\Contact;
 use App\Traits\QueryBuilder;
 use Illuminate\Http\Request;
@@ -11,6 +11,7 @@ use Illuminate\Http\Request;
 class ContactController extends Controller
 {
     use QueryBuilder;
+
     /**
      * Display a listing of the resource.
      */
@@ -25,7 +26,7 @@ class ContactController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(ContactRequest $request)
+    public function store(CreateContactRequest $request)
     {
         Contact::create($request->validated());
         return response()->json(['message' => 'تم إضافة جهة الاتصال بنجاح.'], 201);
@@ -44,7 +45,7 @@ class ContactController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(ContactRequest $request, string $id)
+    public function update(CreateContactRequest $request, string $id)
     {
         $contact = Contact::find($id);
 

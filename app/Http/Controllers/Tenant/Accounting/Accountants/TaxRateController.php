@@ -3,43 +3,42 @@
 namespace App\Http\Controllers\Tenant\Accounting\Accountants;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Tenant\Accounting\Accountants\TaxRateRequest;
-use App\Models\Tenant\Accounting\Accountants\TaxRate;
-use App\Traits\QueryBuilder;
+use App\Http\Requests\Tenant\Accounting\Accountants\CreateTaxRateRequest;
+use App\Http\Requests\Tenant\Accounting\Accountants\UpdateTaxRateRequest;
+use App\Services\V1\Accounting\TaxRateService;
 use Illuminate\Http\Request;
+use function dd;
 
 class TaxRateController extends Controller
 {
-    use QueryBuilder;
+    public function __construct(protected TaxRateService $taxRateService)
+    {
+    }
+
     /**
      * Display a listing of the resource.
      */
     public function index(Request $request)
     {
-        $query = TaxRate::query();
-        $data = $this->applyQuery($request, $query);
-
-        $translated_data= $this->translateActivities($data);
+        $data = $this->taxRateService->index($request);
 
         return response()->json($data, 200);
-    }
-
-    private function translateActivities($tax_rates)
-    {
-        foreach ($tax_rates as &$tax_rate) {
-             $tax_rate['tax_type'] = trans("enum.{$tax_rate['tax_type']}") ?? $tax_rate['tax_type'];         
-        }
-
-        return $tax_rates;
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(TaxRateRequest $request)
+    public function store(CreateTaxRateRequest $request)
     {
-        TaxRate::create($request->validated());
-        return response()->json(['message' => 'تم إضافة الضريبة بنجاح.'], 201);
+        $validated = $request->validated();
+
+        try {
+            $this->taxRateService->store($validated);
+        } catch (\Exception $exception) {
+            return response()->json(['message' => $exception->getMessage()], 400);
+        }
+
+        return response()->json(['message' => trans('crud.created')], 201);
     }
 
     /**
@@ -47,31 +46,25 @@ class TaxRateController extends Controller
      */
     public function show(string $id)
     {
-        $tax_rate = TaxRate::findOrFail($id);
+        $data = $this->taxRateService->show($id);
 
-        return response()->json(['data' => $tax_rate], 200);
+        return response()->json(['data' => $data], 200);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(TaxRateRequest $request, string $id)
+    public function update(UpdateTaxRateRequest $request, string $id)
     {
-        $tax_rate = TaxRate::find($id);
-
-        if ($tax_rate['is_system'] == true) {
-            return response()->json(['message' => 'هذا المعدل الضريبي خاص بالنظام ولا يمكن تعديله.'], 422);
+        $validated = $request->validated();
+        try {
+            $this->taxRateService->update($validated, $id);
+        } catch (\Exception $exception) {
+            return response()->json(['message' => $exception->getMessage()], 400);
         }
 
-        if (!$tax_rate) {
-            return response()->json(['message' => 'العنصر غير موجود.'], 404);
-        }
-
-        $tax_rate->update($request->validated());
-
-        return response()->json(['message' => 'تم تعديل الضريبة بنجاح.'], 200);
+        return response()->json(['message' => trans('crud.updated')], 200);
     }
-
 
     /**
      * Remove the specified resource from storage.
@@ -80,19 +73,12 @@ class TaxRateController extends Controller
     {
         $ids = $request->input('ids');
 
-        foreach ($ids as $id) {
-            $tax_rate = TaxRate::findOrFail($id);
-            if ($tax_rate['is_system'] == true) {
-                return response()->json(['message' => 'هذا المعدل الضريبي خاص بالنظام ولا يمكن حذفه.'], 422);
-            }
+        try {
+            $this->taxRateService->destroy($ids);
+        } catch (\Exception $exception) {
+            return response()->json(['message' => $exception->getMessage()], 400);
         }
 
-        if (!is_array($ids)) {
-            return response()->json(['error' => 'Invalid request format'], 422);
-        }
-
-        TaxRate::destroy($ids);
-
-        return response()->json(['message' => 'تم حذف الضريبة بنجاح.']);
+        return response()->json(['message' => trans('crud.deleted')], 200);
     }
 }

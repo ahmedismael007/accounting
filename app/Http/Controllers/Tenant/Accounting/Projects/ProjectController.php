@@ -4,67 +4,72 @@ namespace App\Http\Controllers\Tenant\Accounting\Projects;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Tenant\Accounting\Projects\ProjectRequest;
-use App\Models\Tenant\Accounting\Projects\Project;
-use App\Traits\QueryBuilder;
+use App\Services\V1\Accounting\ProjectService;
 use Illuminate\Http\Request;
 
 class ProjectController extends Controller
 {
-    use QueryBuilder;
-    /**
-     * Display a listing of the resource.
-     */
+    public function __construct(protected ProjectService $projectService)
+    {
+    }
+
     public function index(Request $request)
     {
-        $query = Project::query();
-        $data = $this->applyQuery($request, $query);
+        $data = $this->projectService->index($request);
 
         return response()->json($data, 200);
     }
 
-
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(ProjectRequest $request)
     {
-        Project::create($request->validated());
-        return response()->json(['message' => 'تم إضافة المشروع بنجاح.'], 201);
+        try {
+            $project = $this->projectService->store($request->validated());
+
+            return response()->json([
+                'message' => trans('crud.created'),
+                'data' => $project
+            ], 201);
+        } catch (\Exception $e) {
+            return response()->json(['message' => $e->getMessage()], 400);
+        }
     }
 
-    /**
-     * Display the specified resource.
-     */
     public function show(string $id)
     {
-        $project = Project::findOrFail($id);
+        try {
+            $project = $this->projectService->show($id);
 
-        return response()->json(['data' => $project], 200);
+            return response()->json(['data' => $project], 200);
+        } catch (\Exception $e) {
+            return response()->json(['message' => $e->getMessage()], 404);
+        }
     }
 
-
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(ProjectRequest $request, string $id)
     {
-        $project = Project::find($id);
+        try {
+            $this->projectService->update($request->validated(), $id);
 
-        $project->update($request->validated());
-
-        return response()->json(['message' => 'تم تعديل المشروع بنجاح.'], 200);
+            return response()->json(['message' => trans('crud.updated')], 200);
+        } catch (\Exception $e) {
+            return response()->json(['message' => $e->getMessage()], 400);
+        }
     }
 
-
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy(Request $request)
     {
         $ids = $request->input('ids');
 
-        Project::destroy($ids);
+        if (!is_array($ids)) {
+            return response()->json(['error' => 'Invalid request format'], 422);
+        }
 
-        return response()->json(['message' => 'تم حذف المشروع بنجاح.']);
+        try {
+            $this->projectService->destroy($ids);
+
+            return response()->json(['message' => trans('crud.deleted')], 200);
+        } catch (\Exception $e) {
+            return response()->json(['message' => $e->getMessage()], 400);
+        }
     }
 }

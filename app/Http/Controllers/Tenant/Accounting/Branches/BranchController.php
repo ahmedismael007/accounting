@@ -3,21 +3,22 @@
 namespace App\Http\Controllers\Tenant\Accounting\Branches;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Tenant\Accounting\Branches\BranchRequest;
-use App\Models\Tenant\Accounting\Branches\Branch;
-use App\Traits\QueryBuilder;
+use App\Http\Requests\Tenant\Accounting\Branches\CreateBranchRequest;
+use App\Services\V1\Accounting\BranchService;
 use Illuminate\Http\Request;
 
 class BranchController extends Controller
 {
-    use QueryBuilder;
+    public function __construct(protected BranchService $branchService)
+    {
+    }
+
     /**
      * Display a listing of the resource.
      */
     public function index(Request $request)
     {
-        $query = Branch::query();
-        $data = $this->applyQuery($request, $query);
+        $data = $this->branchService->index($request);
 
         return response()->json($data, 200);
     }
@@ -25,50 +26,54 @@ class BranchController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(BranchRequest $request)
+    public function store(CreateBranchRequest $request)
     {
         try {
-            $branch = Branch::create($request->validated());
+            $branch = $this->branchService->store($request->validated());
 
             return response()->json([
-                'message' => 'تم إضافة الفرع بنجاح.',
+                'message' => trans('crud.created'),
                 'data' => $branch
             ], 201);
         } catch (\Exception $e) {
             return response()->json([
-                'message' => 'حدث خطأ أثناء إضافة الفرع.',
-                'error' => $e->getMessage()
-            ], 500);
+                'message' => $e->getMessage()
+            ], 400);
         }
     }
-
 
     /**
      * Display the specified resource.
      */
     public function show(string $id)
     {
-        $branch = Branch::findOrFail($id);
+        try {
+            $branch = $this->branchService->show($id);
 
-        return response()->json(['data' => $branch], 200);
+            return response()->json(['data' => $branch], 200);
+        } catch (\Exception $e) {
+            return response()->json(['message' => $e->getMessage()], 404);
+        }
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(BranchRequest $request, string $id)
+    public function update(CreateBranchRequest $request, string $id)
     {
-        $branch = Branch::findOrFail($id);
+        try {
+            $this->branchService->update($request->validated(), $id);
 
-        $branch->update($request->validated());
-
-        return response()->json(['message' => 'تم تعديل بيانات الفرع بنجاح.'], 200);
+            return response()->json(['message' => trans('crud.updated')], 200);
+        } catch (\Exception $e) {
+            return response()->json(['message' => $e->getMessage()], 400);
+        }
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id, Request $request)
+    public function destroy(Request $request)
     {
         $ids = $request->input('ids');
 
@@ -76,8 +81,12 @@ class BranchController extends Controller
             return response()->json(['error' => 'Invalid request format'], 422);
         }
 
-        Branch::destroy($ids);
+        try {
+            $this->branchService->destroy($ids);
 
-        return response()->json(['message' => 'تم حذف الفرع بنجاح.']);
+            return response()->json(['message' => trans('crud.deleted')], 200);
+        } catch (\Exception $e) {
+            return response()->json(['message' => $e->getMessage()], 400);
+        }
     }
 }

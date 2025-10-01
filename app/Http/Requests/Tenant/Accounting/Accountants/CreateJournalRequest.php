@@ -4,7 +4,7 @@ namespace App\Http\Requests\Tenant\Accounting\Accountants;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class JournalRequest extends FormRequest
+class CreateJournalRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.

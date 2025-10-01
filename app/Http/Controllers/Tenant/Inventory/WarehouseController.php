@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Tenant\Inventory;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Tenant\Inventory\WarehouseRequest;
+use App\Http\Requests\Tenant\Inventory\CreateWarehouseRequest;
 use App\Models\Tenant\Accounting\Accountants\Account;
 use App\Models\Tenant\Inventory\Warehouse;
 use App\Services\V1\Common\AccountCodeGeneratorService;
@@ -29,7 +29,7 @@ class WarehouseController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(WarehouseRequest $request, AccountCodeGeneratorService $accountCodeGenerator)
+    public function store(CreateWarehouseRequest $request, AccountCodeGeneratorService $accountCodeGenerator)
     {
         try {
             DB::beginTransaction();
@@ -77,7 +77,7 @@ class WarehouseController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(WarehouseRequest $request, string $id)
+    public function update(CreateWarehouseRequest $request, string $id)
     {
         try {
             DB::beginTransaction();

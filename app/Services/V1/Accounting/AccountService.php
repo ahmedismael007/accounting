@@ -3,11 +3,11 @@
 namespace App\Services\V1\Accounting;
 
 use App\Models\Tenant\Accounting\BankAccounts\BankAccount;
-use App\Repositories\v1\Accounting\AccountRepo;
+use App\Repositories\V1\Accounting\AccountRepo;
 use App\Services\V1\Common\AccountCodeGeneratorService;
 use App\Services\V1\Common\QueryBuilderService;
+use Exception;
 use Illuminate\Http\Request;
-use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 
 class AccountService
@@ -20,22 +20,25 @@ class AccountService
     {
     }
 
-    public function index(Request $request): Collection
+    public function index(Request $request)
     {
         $query = $this->repo->index();
 
-        return $this->queryBuilderService->applyQuery($request, $query)->get();
+        return $this->queryBuilderService->applyQuery($request, $query);
     }
 
     public function store(array $data): Model
     {
-        $data['account_code'] = $this->codeGenerator->generate($data['parent_id'] ?? null);
+        if ($data['parent_id']) {
+            $data['account_code'] = $this->codeGenerator->generate($data['parent_id'] ?? null);
+        }
 
         if (!empty($data['is_bank']) && $data['is_bank'] == true) {
+            $tenant = tenant();
             $bank_account = BankAccount::create([
                 'name' => $data['name'],
                 'type' => 'BANK_ACCOUNT',
-                'currency' => 'SAR',
+                'currency' => $tenant['currency'] ?? 'SAR',
             ]);
 
             $data['bank_account_id'] = $bank_account->id;
@@ -49,7 +52,7 @@ class AccountService
         $account = $this->repo->show($id);
 
         if (!$account || $account->is_system) {
-            return null;
+            throw new Exception(trans('accounting.account_not_editable'));
         }
 
         if (isset($data['parent_id']) && $data['parent_id'] != $account->parent_id) {
@@ -59,7 +62,7 @@ class AccountService
         if ($account->bank_account_id) {
             BankAccount::where('id', $account->bank_account_id)->update([
                 'name' => $data['name'] ?? $account->name,
-             ]);
+            ]);
         }
 
         return $this->repo->update($id, $data);
@@ -76,7 +79,7 @@ class AccountService
             $account = $this->repo->show($id);
 
             if ($account->is_system) {
-                return false;
+                throw new Exception(trans('accounting.account_not_deletable'));
             }
 
             if ($account->bank_account_id) {

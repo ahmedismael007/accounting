@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Tenant\Accounting\Accountants;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Tenant\Accounting\Accountants\JournalRequest;
+use App\Http\Requests\Tenant\Accounting\Accountants\CreateJournalRequest;
 use App\Models\Tenant\Accounting\Accountants\Journal;
 use App\Services\V1\Common\PdfService;
 use App\Services\V1\Common\ReferenceValueFormatterService;
@@ -30,7 +30,7 @@ class JournalController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(JournalRequest $request, PdfService $pdf_service, ReferenceValueFormatterService $formatter)
+    public function store(CreateJournalRequest $request, PdfService $pdf_service, ReferenceValueFormatterService $formatter)
     {
         $user = Auth::user();
         $user_with_email = $user['first_name'] . ' ' . $user['last_name'] . ' - ' . $user['email'];
@@ -112,7 +112,7 @@ class JournalController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(JournalRequest $request, string $id)
+    public function update(CreateJournalRequest $request, string $id)
     {
         $user = Auth::user();
         $user_with_email = $user['first_name'] . ' ' . $user['last_name'] . ' - ' . $user['email'];

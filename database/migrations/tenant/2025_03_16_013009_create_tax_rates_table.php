@@ -12,8 +12,7 @@ return new class extends Migration {
     {
         Schema::create('tax_rates', function (Blueprint $table) {
             $table->id();
-            $table->string('name_ar')->nullable();
-            $table->string('name_en')->nullable();
+            $table->json('name')->nullable();
             $table->string('tax_type');
             $table->decimal('tax_rate', 6, 2);
             $table->text('description')->nullable();

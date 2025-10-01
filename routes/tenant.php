@@ -29,10 +29,19 @@ Route::prefix('api/v1')->middleware([InitializeTenantFromHeader::class, SetLocal
     // Accounting
     Route::delete('chart-of-accounts', [AccountController::class, 'destroy']);
     Route::apiResource('chart-of-accounts', AccountController::class);
+
+    Route::delete('tax-rates', [TaxRateController::class, 'destroy']);
     Route::apiResource('tax-rates', TaxRateController::class);
+
+    Route::delete('branches', [BranchController::class, 'destroy']);
     Route::apiResource('branches', BranchController::class);
+
+    Route::delete('projects', [ProjectController::class, 'destroy']);
     Route::apiResource('projects', ProjectController::class);
+
+    Route::delete('bank-accounts', [BankAccountController::class, 'destroy']);
     Route::apiResource('bank-accounts', BankAccountController::class);
+
     Route::apiResource('cost-centers', CostCenterController::class);
     Route::apiResource('fixed-assets', FixedAssetController::class);
     Route::apiResource('contacts', ContactController::class);

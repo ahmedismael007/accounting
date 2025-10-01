@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Tenant\Inventory;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Tenant\Inventory\ProductRequest;
+use App\Http\Requests\Tenant\Inventory\CreateProductRequest;
 use App\Models\Tenant\Inventory\Product;
 use App\Traits\QueryBuilder;
 use Illuminate\Http\Request;
@@ -11,6 +11,7 @@ use Illuminate\Http\Request;
 class ProductController extends Controller
 {
     use QueryBuilder;
+
     /**
      * Display a listing of the resource.
      */
@@ -25,7 +26,7 @@ class ProductController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(ProductRequest $request)
+    public function store(CreateProductRequest $request)
     {
         try {
             $product = Product::create($request->validated());
@@ -56,7 +57,7 @@ class ProductController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(ProductRequest $request, string $id)
+    public function update(CreateProductRequest $request, string $id)
     {
         $product = Product::findOrFail($id);
 

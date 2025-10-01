@@ -1,13 +1,12 @@
 <?php
 
-namespace App\Http\Requests\Tenant\Accounting\BankAccounts;
+namespace App\Http\Requests\Tenant\Accounting\Accountants;
 
-use App\Enums\BankAccountType;
-use App\Enums\CurrencyType;
+use App\Enums\TaxType;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
-class BankAccountRequest extends FormRequest
+class UpdateTaxRateRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -25,10 +24,11 @@ class BankAccountRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name_ar' => 'required|string|max:255',
-            'name_en' => 'required|string|max:255',
-            'type' => ['required', 'string', Rule::in(BankAccountType::options())],
-            'currency' => ['required', 'string', Rule::in(CurrencyType::options())]
+            'name' => 'sometimes|array',
+            'name.*' => 'string|sometimes',
+            'tax_type' => ['sometimes', 'string', Rule::in(array_column(TaxType::cases(), 'name'))],
+            'tax_rate' => 'numeric|sometimes',
+            'description' => 'sometimes|string',
         ];
     }
 }

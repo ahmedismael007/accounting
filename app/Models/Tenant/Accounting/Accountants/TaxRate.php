@@ -8,11 +8,15 @@ class TaxRate extends Model
 {
 
     protected $fillable = [
-        'name_ar',
-        'name_en',
+        'name',
         'tax_type',
         'tax_rate',
         'description',
         'is_system'
+    ];
+
+    protected $casts = [
+        'is_system' => 'boolean',
+        'name' => 'array'
     ];
 }

@@ -20,15 +20,20 @@ class BankAccountSeeder extends Seeder
 
         $mapped = array_map(function ($item) {
             return [
-                'name_ar'  => $item['name']['ar'] ?? null,
-                'name_en'  => $item['name']['en'] ?? null,
-                'type'     => $item['type'],
+                'name' => $item['name'],
+                'type' => $item['type'],
                 'currency' => $item['currency'],
                 'created_at' => now(),
                 'updated_at' => now(),
             ];
         }, $bank_accounts);
 
-        DB::table('bank_accounts')->insert($mapped);
+        foreach ($bank_accounts as $item) {
+            BankAccount::create([
+                'name' => $item['name'],
+                'type' => $item['type'],
+                'currency' => $item['currency'],
+            ]);
+        }
     }
 }
