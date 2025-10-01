@@ -23,6 +23,7 @@ class AccountService
     public function index(Request $request): Collection
     {
         $query = $this->repo->index();
+
         return $this->queryBuilderService->applyQuery($request, $query)->get();
     }
 
@@ -57,9 +58,8 @@ class AccountService
 
         if ($account->bank_account_id) {
             BankAccount::where('id', $account->bank_account_id)->update([
-                'name_ar' => $data['name_ar'] ?? $account->name_ar,
-                'name_en' => $data['name_en'] ?? $account->name_en,
-            ]);
+                'name' => $data['name'] ?? $account->name,
+             ]);
         }
 
         return $this->repo->update($id, $data);

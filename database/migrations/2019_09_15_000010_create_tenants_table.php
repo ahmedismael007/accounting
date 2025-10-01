@@ -30,7 +30,7 @@ class CreateTenantsTable extends Migration
             $table->boolean('is_vat_registered')->default(false);
             $table->string('phone')->nullable();
             $table->string('email')->nullable();
-            $table->date('tax_registeration_date')->nullable();
+            $table->date('tax_registration_date')->nullable();
             $table->date('tax_first_due_date')->nullable();
             $table->string('tax_period')->nullable();
             $table->string('fiscal_year_end')->nullable();
