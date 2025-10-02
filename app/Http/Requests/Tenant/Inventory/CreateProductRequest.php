@@ -23,8 +23,10 @@ class CreateProductRequest extends FormRequest
     {
         return [
             'sku' => ['sometimes', 'string', 'max:100'],
-            'name' => ['required', 'string', 'max:255'],
-            'description' => ['sometimes', 'string'],
+            'name' => ['required', 'array'],
+            'name.*' => ['sometimes', 'string'],
+            'description' => ['sometimes', 'array'],
+            'description.*' => ['sometimes', 'string'],
             'unit_cost' => ['sometimes', 'numeric'],
             'unit_price' => ['sometimes', 'numeric'],
             'expense_account' => ['sometimes', 'exists:accounts,id'],

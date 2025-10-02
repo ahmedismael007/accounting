@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Requests\Tenant\Accounting\Customers;
+namespace App\Http\Requests\Tenant\Accounting\Contacts;
 
 use Illuminate\Foundation\Http\FormRequest;
 

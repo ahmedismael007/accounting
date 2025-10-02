@@ -22,6 +22,7 @@ class JournalController extends Controller
     public function index(Request $request)
     {
         $query = Journal::where('type', 'manual')->with('journal_line_items');
+
         $data = $this->applyQuery($request, $query);
 
         return response()->json($data, 200);

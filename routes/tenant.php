@@ -10,7 +10,7 @@ use App\Http\Controllers\Tenant\Accounting\Accountants\TaxRateController;
 use App\Http\Controllers\Tenant\Accounting\BankAccounts\BankAccountController;
 use App\Http\Controllers\Tenant\Accounting\Branches\BranchController;
 use App\Http\Controllers\Tenant\Accounting\CostCenter\CostCenterController;
-use App\Http\Controllers\Tenant\Accounting\Customers\ContactController;
+use App\Http\Controllers\Tenant\Accounting\Contacts\ContactController;
 use App\Http\Controllers\Tenant\Accounting\FixedAssets\FixedAssetController;
 use App\Http\Controllers\Tenant\Accounting\Projects\ProjectController;
 use App\Http\Controllers\Tenant\Inventory\InventoryAdjustmentController;
@@ -42,14 +42,24 @@ Route::prefix('api/v1')->middleware([InitializeTenantFromHeader::class, SetLocal
     Route::delete('bank-accounts', [BankAccountController::class, 'destroy']);
     Route::apiResource('bank-accounts', BankAccountController::class);
 
+    Route::delete('cost-centers', [CostCenterController::class, 'destroy']);
     Route::apiResource('cost-centers', CostCenterController::class);
+
+    Route::delete('fixed-assets', [FixedAssetController::class, 'destroy']);
     Route::apiResource('fixed-assets', FixedAssetController::class);
+
+    Route::delete('contacts', [ContactController::class, 'destroy']);
     Route::apiResource('contacts', ContactController::class);
+
     Route::apiResource('journals', JournalController::class);
 
     // Inventory Management
+    Route::delete('products', [ProductController::class, 'destroy']);
     Route::apiResource('products', ProductController::class);
+
     Route::apiResource('adjustments', InventoryAdjustmentController::class);
+
+    Route::delete('warehouses', [WarehouseController::class, 'destroy']);
     Route::apiResource('warehouses', WarehouseController::class);
 
     // Payroll

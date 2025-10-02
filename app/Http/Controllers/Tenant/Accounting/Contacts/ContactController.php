@@ -1,59 +1,45 @@
 <?php
 
-namespace App\Http\Controllers\Tenant\Accounting\CostCenter;
+namespace App\Http\Controllers\Tenant\Accounting\Contacts;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Tenant\Accounting\CostCenter\CostCenterRequest;
-use App\Services\V1\Accounting\CostCenterService;
+use App\Http\Requests\Tenant\Accounting\Contacts\CreateContactRequest;
+use App\Http\Requests\Tenant\Accounting\Contacts\UpdateContactRequest;
+use App\Services\V1\Accounting\ContactService;
 use Illuminate\Http\Request;
 
-class CostCenterController extends Controller
+class ContactController extends Controller
 {
     public function __construct(
-        protected CostCenterService $service
+        protected ContactService $service
     )
     {
     }
 
-    /**
-     * Display a listing of the resource.
-     */
     public function index(Request $request)
     {
         $data = $this->service->index($request);
         return response()->json($data, 200);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(CostCenterRequest $request)
+    public function store(CreateContactRequest $request)
     {
         $this->service->store($request->validated());
         return response()->json(['message' => trans('crud.created')], 201);
     }
 
-    /**
-     * Display the specified resource.
-     */
     public function show(string $id)
     {
         $data = $this->service->show($id);
         return response()->json(['data' => $data], 200);
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(CostCenterRequest $request, string $id)
+    public function update(UpdateContactRequest $request, string $id)
     {
         $this->service->update($request->validated(), $id);
         return response()->json(['message' => trans('crud.updated')], 200);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy(Request $request)
     {
         $this->service->destroy($request->input('ids'));

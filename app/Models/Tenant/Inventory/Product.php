@@ -6,10 +6,12 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
+use Spatie\MediaLibrary\MediaCollections\Models\Media;
 
 class Product extends Model implements HasMedia
 {
     use InteractsWithMedia;
+
     protected $fillable = [
         'sku',
         'name',
@@ -31,4 +33,14 @@ class Product extends Model implements HasMedia
     {
         return $this->belongsTo(Warehouse::class);
     }
+
+    public function registerMediaCollections(): void
+    {
+        $this->addMediaCollection('products');
+    }
+
+    protected $casts = [
+        'name' => 'array',
+        'description' => 'array',
+    ];
 }

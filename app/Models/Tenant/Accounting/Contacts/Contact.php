@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Models\Tenant\Accounting\Customers;
+namespace App\Models\Tenant\Accounting\Contacts;
 
 use App\Models\Tenant\Accounting\Accountants\JournalLineItem;
 use Illuminate\Database\Eloquent\Model;

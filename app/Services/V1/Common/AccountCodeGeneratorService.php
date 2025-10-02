@@ -4,26 +4,36 @@ namespace App\Services\V1\Common;
 
 use App\Models\Tenant\Accounting\Accountants\Account;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\DB;
+use InvalidArgumentException;
 
 class AccountCodeGeneratorService
 {
     public function generate(int $parentId): string
     {
-        $parent = Account::findOrFail($parentId);
-        $parentCode = $parent->account_code;
-
-        $maxCode = Account::where('parent_id', $parentId)
-            ->where('account_code', 'like', "{$parentCode}%")
-            ->orderByDesc('account_code')
-            ->value('account_code');
-
-        if (!$maxCode) {
-            return $parentCode . '1';
+        $parent = Account::find($parentId);
+        if (!$parent) {
+            throw new InvalidArgumentException("Parent account with ID {$parentId} not found.");
         }
 
-        $suffix = (int)Str::after($maxCode, $parentCode);
-        $nextCode = $parentCode . ($suffix + 1);
+        $parentCode = $parent->account_code;
+        $pos = strlen($parentCode) + 1;
 
-        return $nextCode;
+        $maxSuffix = DB::table('accounts')
+            ->where('parent_id', $parentId)
+            ->where('account_code', 'like', $parentCode . '%')
+            ->selectRaw("MAX(CAST(SUBSTRING(account_code, {$pos}) AS UNSIGNED)) as max_suffix")
+            ->lockForUpdate()
+            ->value('max_suffix');
+
+        $nextSuffix = $maxSuffix === null ? 1 : ((int)$maxSuffix + 1);
+        $candidate = $parentCode . $nextSuffix;
+
+        while (DB::table('accounts')->where('account_code', $candidate)->exists()) {
+            $nextSuffix++;
+            $candidate = $parentCode . $nextSuffix;
+        }
+
+        return $candidate;
     }
 }

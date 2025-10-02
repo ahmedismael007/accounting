@@ -4,81 +4,63 @@ namespace App\Http\Controllers\Tenant\Inventory;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Tenant\Inventory\CreateProductRequest;
-use App\Models\Tenant\Inventory\Product;
-use App\Traits\QueryBuilder;
+use App\Services\V1\Inventory\ProductService;
 use Illuminate\Http\Request;
 
 class ProductController extends Controller
 {
-    use QueryBuilder;
 
-    /**
-     * Display a listing of the resource.
-     */
+    public function __construct(
+        protected ProductService $productService
+    )
+    {
+    }
+
     public function index(Request $request)
     {
-        $query = Product::query();
-        $data = $this->applyQuery($request, $query);
-
+        $data = $this->productService->index($request);
         return response()->json($data, 200);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(CreateProductRequest $request)
     {
-        try {
-            $product = Product::create($request->validated());
+        $product = $this->productService->store(
+            $request->validated(),
+            $request->file('media') ?? []
+        );
 
-            return response()->json([
-                'message' => 'تم إضافة المنتج بنجاح.',
-                'data' => $product
-            ], 201);
-        } catch (\Exception $e) {
-            return response()->json([
-                'message' => 'حدث خطأ أثناء إضافة المنتج.',
-                'error' => $e->getMessage()
-            ], 500);
-        }
+        return response()->json([
+            'message' => trans('crud.created'),
+            'data' => $product->load('media')
+        ], 201);
     }
 
-
-    /**
-     * Display the specified resource.
-     */
     public function show(string $id)
     {
-        $product = Product::findOrFail($id);
-
-        return response()->json(['data' => $product], 200);
+        $product = $this->productService->show($id);
+        return response()->json(['data' => $product->load('media')], 200);
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(CreateProductRequest $request, string $id)
     {
-        $product = Product::findOrFail($id);
+        $this->productService->update(
+            $request->validated(),
+            $id,
+            $request->file('media') ?? []
+        );
 
-        $product->update($request->validated());
-
-        return response()->json(['message' => 'تم تعديل بيانات المنتج بنجاح.'], 200);
+        return response()->json(['message' => trans('crud.updated')], 200);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id, Request $request)
+    public function destroy(Request $request)
     {
         $ids = $request->input('ids');
-
         if (!is_array($ids)) {
             return response()->json(['error' => 'Invalid request format'], 422);
         }
 
-        Product::destroy($ids);
+        $this->productService->destroy($ids);
 
-        return response()->json(['message' => 'تم حذف المنتج بنجاح.']);
+        return response()->json(['message' => trans('crud.deleted')]);
     }
 }
