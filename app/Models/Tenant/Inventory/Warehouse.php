@@ -21,6 +21,11 @@ class Warehouse extends Model
 
     public function products(): HasMany
     {
-        return $this->hasMany(Product::class);
+        return $this->hasMany(Item::class);
+    }
+
+    public function inventory_adjustments(): HasMany
+    {
+        return $this->hasMany(InventoryAdjustment::class);
     }
 }

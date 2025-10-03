@@ -4,11 +4,11 @@ namespace App\Models\Tenant\Inventory;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
-use Spatie\MediaLibrary\MediaCollections\Models\Media;
 
-class Product extends Model implements HasMedia
+class Item extends Model implements HasMedia
 {
     use InteractsWithMedia;
 
@@ -34,9 +34,14 @@ class Product extends Model implements HasMedia
         return $this->belongsTo(Warehouse::class);
     }
 
+    public function inventory_adjustments(): HasMany
+    {
+        return $this->hasMany(InventoryAdjustment::class);
+    }
+
     public function registerMediaCollections(): void
     {
-        $this->addMediaCollection('products');
+        $this->addMediaCollection('items');
     }
 
     protected $casts = [

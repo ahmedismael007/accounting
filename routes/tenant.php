@@ -14,7 +14,7 @@ use App\Http\Controllers\Tenant\Accounting\Contacts\ContactController;
 use App\Http\Controllers\Tenant\Accounting\FixedAssets\FixedAssetController;
 use App\Http\Controllers\Tenant\Accounting\Projects\ProjectController;
 use App\Http\Controllers\Tenant\Inventory\InventoryAdjustmentController;
-use App\Http\Controllers\Tenant\Inventory\ProductController;
+use App\Http\Controllers\Tenant\Inventory\ItemController;
 use App\Http\Controllers\Tenant\Inventory\WarehouseController;
 use App\Http\Middleware\InitializeTenantFromHeader;
 use App\Http\Middleware\SetLocaleFromHeader;
@@ -54,10 +54,10 @@ Route::prefix('api/v1')->middleware([InitializeTenantFromHeader::class, SetLocal
     Route::apiResource('journals', JournalController::class);
 
     // Inventory Management
-    Route::delete('products', [ProductController::class, 'destroy']);
-    Route::apiResource('products', ProductController::class);
+    Route::delete('items', [ItemController::class, 'destroy']);
+    Route::apiResource('items', ItemController::class);
 
-    Route::apiResource('adjustments', InventoryAdjustmentController::class);
+    Route::apiResource('inventory-adjustments', InventoryAdjustmentController::class);
 
     Route::delete('warehouses', [WarehouseController::class, 'destroy']);
     Route::apiResource('warehouses', WarehouseController::class);

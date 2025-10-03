@@ -2,17 +2,16 @@
 
 namespace App\Services\V1\Inventory;
 
-use App\Repositories\V1\Inventory\ProductRepo;
+use App\Repositories\V1\Inventory\ItemRepo;
 use App\Services\V1\Common\QueryBuilderService;
-use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
-class ProductService
+class ItemService
 {
     public function __construct(
-        protected ProductRepo         $productRepo,
+        protected ItemRepo            $itemRepo,
         protected QueryBuilderService $queryBuilder
     )
     {
@@ -20,7 +19,7 @@ class ProductService
 
     public function index(Request $request)
     {
-        $query = $this->productRepo->applyQuery();
+        $query = $this->itemRepo->applyQuery();
 
         return $this->queryBuilder->applyQuery($request, $query);
     }
@@ -28,33 +27,33 @@ class ProductService
     public function store(array $data, ?array $files = []): Model
     {
         return DB::transaction(function () use ($data, $files) {
-            $product = $this->productRepo->create($data);
+            $item = $this->itemRepo->create($data);
 
             if (!empty($files)) {
                 foreach ($files as $file) {
-                    $product->addMedia($file)->toMediaCollection('products');
+                    $item->addMedia($file)->toMediaCollection('items');
                 }
             }
 
-            return $product;
+            return $item;
         });
     }
 
     public function show(string $id): Model
     {
-        return $this->productRepo->findOrFail($id);
+        return $this->itemRepo->findOrFail($id);
     }
 
     public function update(array $data, string $id, ?array $files = []): bool
     {
         return DB::transaction(function () use ($data, $id, $files) {
-            $product = $this->productRepo->findOrFail($id);
-            $this->productRepo->update($product, $data);
+            $item = $this->itemRepo->findOrFail($id);
+            $this->itemRepo->update($item, $data);
 
             if (!empty($files)) {
-                $product->clearMediaCollection('products');
+                $item->clearMediaCollection('items');
                 foreach ($files as $file) {
-                    $product->addMedia($file)->toMediaCollection('products');
+                    $item->addMedia($file)->toMediaCollection('items');
                 }
             }
 
@@ -65,7 +64,7 @@ class ProductService
     public function destroy(array $ids): void
     {
         DB::transaction(function () use ($ids) {
-            $this->productRepo->destroy($ids);
+            $this->itemRepo->destroy($ids);
         });
     }
 }

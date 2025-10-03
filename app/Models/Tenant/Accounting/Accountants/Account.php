@@ -3,6 +3,7 @@
 namespace App\Models\Tenant\Accounting\Accountants;
 
 use App\Models\Tenant\Accounting\BankAccounts\BankAccount;
+use App\Models\Tenant\Inventory\InventoryAdjustment;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -45,8 +46,13 @@ class Account extends Model
         return $this->hasMany(JournalLineItem::class);
     }
 
+    public function inventory_adjustments(): HasMany
+    {
+        return $this->hasMany(InventoryAdjustment::class);
+    }
+
     protected $casts = [
-        'name' => 'array',  
+        'name' => 'array',
         'show_in_expense_claims' => 'boolean',
         'is_locked' => 'boolean',
         'is_system' => 'boolean',
