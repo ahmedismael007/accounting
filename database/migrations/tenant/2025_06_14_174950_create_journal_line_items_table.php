@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('journal_id')->constrained()->cascadeOnDelete();
             $table->foreignId('account_id')->nullable()->constrained()->nullOnDelete();
-            $table->text('user');
+            $table->text('created_by');
             $table->enum('type', ['manual', 'auto'])->default('manual');
             $table->text('description');
             $table->string('currency');

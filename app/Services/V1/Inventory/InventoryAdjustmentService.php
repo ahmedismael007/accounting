@@ -34,28 +34,12 @@ class InventoryAdjustmentService
 
             $amount = $data['total_adjustment_amount'];
             $inventoryAccountId = $data['account_id']; // حساب المخزون من الـ item
-            $cogsAccountId = config('accounts.cogs_account_id'); // ثابت في الإعدادات
+            $cogsAccountId = 53;
 
             if ($amount < 0) {
-                // عجز
-                $this->journalService->create([
-                    'reference' => $adjustment->adjustment_id,
-                    'date' => $data['date'],
-                    'entries' => [
-                        ['account_id' => $cogsAccountId, 'debit' => abs($amount), 'credit' => 0],
-                        ['account_id' => $inventoryAccountId, 'debit' => 0, 'credit' => abs($amount)],
-                    ],
-                ]);
+
             } else {
-                // زيادة
-                $this->journalService->create([
-                    'reference' => $adjustment->adjustment_id,
-                    'date' => $data['date'],
-                    'entries' => [
-                        ['account_id' => $inventoryAccountId, 'debit' => $amount, 'credit' => 0],
-                        ['account_id' => $cogsAccountId, 'debit' => 0, 'credit' => $amount],
-                    ],
-                ]);
+
             }
 
             return $adjustment;

@@ -14,7 +14,7 @@ class JournalLineItem extends Model
     protected $fillable = [
         'journal_id',
         'account_id',
-        'user',
+        'created_by',
         'type',
         'description',
         'currency',

@@ -6,4 +6,12 @@ use Illuminate\Database\Eloquent\Model;
 
 class Employee extends Model
 {
-}
+    protected $fillable = [
+        'name',
+        'email',
+        'user_id',
+        'country',
+        'city',
+        'address',
+    ];
+ }
