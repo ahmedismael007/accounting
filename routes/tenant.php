@@ -16,6 +16,7 @@ use App\Http\Controllers\Tenant\Accounting\Projects\ProjectController;
 use App\Http\Controllers\Tenant\Inventory\InventoryAdjustmentController;
 use App\Http\Controllers\Tenant\Inventory\ItemController;
 use App\Http\Controllers\Tenant\Inventory\WarehouseController;
+use App\Http\Controllers\Tenant\Payroll\PayrollController;
 use App\Http\Middleware\InitializeTenantFromHeader;
 use App\Http\Middleware\SetLocaleFromHeader;
 use Illuminate\Support\Facades\Route;
@@ -63,5 +64,7 @@ Route::prefix('api/v1')->middleware([InitializeTenantFromHeader::class, SetLocal
     Route::apiResource('warehouses', WarehouseController::class);
 
     // Payroll
+    Route::delete('payrolls', [PayrollController::class, 'destroy']);
+    Route::apiResource('payrolls', PayrollController::class);
 
 });
