@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Repositories\V1\Inventory;
+namespace App\Repositories\V1\Accounting;
 
 use App\Models\Tenant\Accounting\Accountants\Journal;
 
