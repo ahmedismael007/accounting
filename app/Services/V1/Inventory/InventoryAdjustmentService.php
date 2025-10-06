@@ -13,8 +13,10 @@ class InventoryAdjustmentService
 {
     public function __construct(
         protected InventoryAdjustmentRepo $repo,
-        protected QueryBuilderService $queryBuilder
-    ) {}
+        protected QueryBuilderService     $queryBuilder
+    )
+    {
+    }
 
     public function index(Request $request)
     {
@@ -26,14 +28,14 @@ class InventoryAdjustmentService
     {
         return DB::transaction(function () use ($data) {
             $data['total_adjustment_amount'] = $data['qty'] * $data['inventory_value'];
-            $adjustment =   $this->repo->create($data);
+            $adjustment = $this->repo->create($data);
 
             $adjustment->update([
                 'adjustment_id' => 'ADJ-' . str_pad($adjustment->id, 4, '0', STR_PAD_LEFT)
             ]);
 
             $amount = $data['total_adjustment_amount'];
-            $inventoryAccountId = $data['account_id']; // حساب المخزون من الـ item
+            $inventoryAccountId = $data['account_id'];
             $cogsAccountId = 53;
 
             if ($amount < 0) {

@@ -16,11 +16,13 @@ use Throwable;
 class JournalService
 {
     public function __construct(
-        protected JournalRepo $repo,
-        protected PdfService $pdfService,
+        protected JournalRepo                    $repo,
+        protected PdfService                     $pdfService,
         protected ReferenceValueFormatterService $formatter,
-        protected QueryBuilderService $queryBuilder
-    ) {}
+        protected QueryBuilderService            $queryBuilder
+    )
+    {
+    }
 
     public function index(Request $request)
     {
@@ -44,13 +46,13 @@ class JournalService
 
             $lineItems = collect($request->input('journal_line_items'))->map(function ($item) use ($user_with_email, $journal) {
                 return [
-                    'created_by' => $user_with_email,
+                    'created_by' => $user_with_email ?? 'SYSTEM',
                     'account_id' => $item['account_id'],
-                    'description' => $item['description'],
+                    'description' => $item['description'] ?? null,
                     'currency' => $item['currency'],
                     'exchange_rate' => $item['exchange_rate'] ?? 1,
-                    'debit' => $item['debit'],
-                    'credit' => $item['credit'],
+                    'debit' => $item['debit'] ?? null,
+                    'credit' => $item['credit'] ?? null,
                     'debit_dc' => $item['debit_dc'],
                     'credit_dc' => $item['credit_dc'],
                     'tax_rate' => $item['tax_rate'] ?? 0,
@@ -58,7 +60,7 @@ class JournalService
                     'project_id' => $item['project_id'] ?? null,
                     'branch_id' => $item['branch_id'] ?? null,
                     'cost_center_id' => $item['cost_center_id'] ?? null,
-                    'source_type' => 'manual',
+                    'source_type' => 'manual_journal',
                     'source_id' => $journal->id,
                 ];
             });
@@ -129,13 +131,13 @@ class JournalService
             $user_with_email = $this->formatUserWithEmail(Auth::user());
             $lineItems = collect($request->input('journal_line_items'))->map(function ($item) use ($user_with_email, $journal) {
                 return [
-                    'created_by' => $user_with_email,
+                    'created_by' => $user_with_email ?? 'SYSTEM',
                     'account_id' => $item['account_id'],
-                    'description' => $item['description'],
+                    'description' => $item['description'] ?? null,
                     'currency' => $item['currency'],
                     'exchange_rate' => $item['exchange_rate'] ?? 1,
-                    'debit' => $item['debit'],
-                    'credit' => $item['credit'],
+                    'debit' => $item['debit'] ?? null,
+                    'credit' => $item['credit'] ?? null,
                     'debit_dc' => $item['debit_dc'],
                     'credit_dc' => $item['credit_dc'],
                     'tax_rate' => $item['tax_rate'] ?? 0,
@@ -143,7 +145,7 @@ class JournalService
                     'project_id' => $item['project_id'] ?? null,
                     'branch_id' => $item['branch_id'] ?? null,
                     'cost_center_id' => $item['cost_center_id'] ?? null,
-                    'source_type' => 'manual',
+                    'source_type' => 'manual_journal',
                     'source_id' => $journal->id,
                 ];
             });
@@ -195,8 +197,8 @@ class JournalService
 
         if ($user) {
             $firstName = $user['first_name'] ?? ($user->first_name ?? '');
-            $lastName  = $user['last_name'] ?? ($user->last_name ?? '');
-            $email     = $user['email'] ?? ($user->email ?? '');
+            $lastName = $user['last_name'] ?? ($user->last_name ?? '');
+            $email = $user['email'] ?? ($user->email ?? '');
             $name = trim("{$firstName} {$lastName}");
             $user_with_email = $name ? "{$name} - {$email}" : ($email ?: 'UNKNOWN USER');
         }

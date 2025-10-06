@@ -4,8 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
-{
+return new class extends Migration {
     /**
      * Run the migrations.
      */
@@ -13,15 +12,14 @@ return new class extends Migration
     {
         Schema::create('payrolls', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('employee_id');
+            $table->foreignId('employee_id')->constrained()->cascadeOnUpdate()->noActionOnDelete();
             $table->string('description')->nullable();
-            $table->unsignedBigInteger('account_id');
+            $table->foreignId('account_id');
             $table->decimal('amount', 15, 2)->default(0);
-            $table->unsignedBigInteger('cost_center_id')->nullable();
-            $table->decimal('total', 15, 2)->default(0);
+            $table->foreignId('cost_center_id')->nullable()->constrained()->cascadeOnUpdate()->noActionOnDelete();
             $table->string('currency', 10);
-            $table->unsignedBigInteger('project_id')->nullable();
-            $table->unsignedBigInteger('branch_id')->nullable();
+            $table->foreignId('project_id')->nullable()->constrained()->cascadeOnUpdate()->noActionOnDelete();
+            $table->foreignId('branch_id')->nullable()->constrained()->cascadeOnUpdate()->noActionOnDelete();
             $table->boolean('include_in_payrun')->default(true);
             $table->timestamps();
         });

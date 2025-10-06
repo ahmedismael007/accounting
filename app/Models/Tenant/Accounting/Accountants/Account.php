@@ -4,6 +4,7 @@ namespace App\Models\Tenant\Accounting\Accountants;
 
 use App\Models\Tenant\Accounting\BankAccounts\BankAccount;
 use App\Models\Tenant\Inventory\InventoryAdjustment;
+use App\Models\Tenant\Payroll\Payroll;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -49,6 +50,11 @@ class Account extends Model
     public function inventory_adjustments(): HasMany
     {
         return $this->hasMany(InventoryAdjustment::class);
+    }
+
+    public function payrolls(): HasMany
+    {
+        return $this->hasMany(Payroll::class);
     }
 
     protected $casts = [

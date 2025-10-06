@@ -16,7 +16,9 @@ use App\Http\Controllers\Tenant\Accounting\Projects\ProjectController;
 use App\Http\Controllers\Tenant\Inventory\InventoryAdjustmentController;
 use App\Http\Controllers\Tenant\Inventory\ItemController;
 use App\Http\Controllers\Tenant\Inventory\WarehouseController;
+use App\Http\Controllers\Tenant\Payroll\EmployeeController;
 use App\Http\Controllers\Tenant\Payroll\PayrollController;
+use App\Http\Controllers\Tenant\Payroll\PayRunController;
 use App\Http\Middleware\InitializeTenantFromHeader;
 use App\Http\Middleware\SetLocaleFromHeader;
 use Illuminate\Support\Facades\Route;
@@ -52,6 +54,7 @@ Route::prefix('api/v1')->middleware([InitializeTenantFromHeader::class, SetLocal
     Route::delete('contacts', [ContactController::class, 'destroy']);
     Route::apiResource('contacts', ContactController::class);
 
+    Route::delete('journals', [JournalController::class, 'destroy']);
     Route::apiResource('journals', JournalController::class);
 
     // Inventory Management
@@ -64,7 +67,13 @@ Route::prefix('api/v1')->middleware([InitializeTenantFromHeader::class, SetLocal
     Route::apiResource('warehouses', WarehouseController::class);
 
     // Payroll
+    Route::delete('employees', [EmployeeController::class, 'destroy']);
+    Route::apiResource('employees', EmployeeController::class);
+
     Route::delete('payrolls', [PayrollController::class, 'destroy']);
     Route::apiResource('payrolls', PayrollController::class);
+
+    Route::delete('payruns', [PayRunController::class, 'destroy']);
+    Route::apiResource('payruns', PayRunController::class);
 
 });

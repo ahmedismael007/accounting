@@ -4,8 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
-{
+return new class extends Migration {
     /**
      * Run the migrations.
      */
@@ -15,8 +14,8 @@ return new class extends Migration
             $table->id();
             $table->enum('type', ['auto', 'manual'])->default('manual');
             $table->date('date');
-            $table->string('reference');
-            $table->text('notes');
+            $table->string('reference')->nullable();
+            $table->text('notes')->nullable();
             $table->timestamps();
         });
     }

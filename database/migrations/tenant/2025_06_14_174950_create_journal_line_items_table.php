@@ -4,8 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
-{
+return new class extends Migration {
     /**
      * Run the migrations.
      */
@@ -17,11 +16,11 @@ return new class extends Migration
             $table->foreignId('account_id')->nullable()->constrained()->nullOnDelete();
             $table->text('created_by');
             $table->enum('type', ['manual', 'auto'])->default('manual');
-            $table->text('description');
+            $table->text('description')->nullable();
             $table->string('currency');
             $table->decimal('exchange_rate', 15, 2)->default(1);
-            $table->decimal('debit', 15, 2);
-            $table->decimal('credit', 15, 2);
+            $table->decimal('debit', 15, 2)->nullable()->default(0);
+            $table->decimal('credit', 15, 2)->nullable()->default(0);
             $table->decimal('debit_dc', 15, 2);
             $table->decimal('credit_dc', 15, 2);
             $table->decimal('tax_rate_id', 6, 2)->default(0);

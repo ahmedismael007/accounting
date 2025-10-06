@@ -21,14 +21,13 @@ class PayrollRequest extends FormRequest
      */
     public function rules(): array
     {
-         if ($this->isMethod('post')) {
+        if ($this->isMethod('post')) {
             return [
                 'employee_id' => ['required', 'integer'],
                 'description' => ['nullable', 'string', 'max:255'],
                 'account_id' => ['required', 'integer'],
                 'amount' => ['required', 'numeric', 'min:0'],
                 'cost_center_id' => ['nullable', 'integer'],
-                'total' => ['required', 'numeric', 'min:0'],
                 'currency' => ['required', 'string', 'max:10'],
                 'project_id' => ['nullable', 'integer'],
                 'branch_id' => ['nullable', 'integer'],
@@ -36,14 +35,13 @@ class PayrollRequest extends FormRequest
             ];
         }
 
-         if ($this->isMethod('put') || $this->isMethod('patch')) {
+        if ($this->isMethod('put') || $this->isMethod('patch')) {
             return [
                 'employee_id' => ['sometimes', 'required', 'integer'],
                 'description' => ['sometimes', 'nullable', 'string', 'max:255'],
                 'account_id' => ['sometimes', 'required', 'integer'],
                 'amount' => ['sometimes', 'required', 'numeric', 'min:0'],
                 'cost_center_id' => ['sometimes', 'nullable', 'integer'],
-                'total' => ['sometimes', 'required', 'numeric', 'min:0'],
                 'currency' => ['sometimes', 'required', 'string', 'max:10'],
                 'project_id' => ['sometimes', 'nullable', 'integer'],
                 'branch_id' => ['sometimes', 'nullable', 'integer'],

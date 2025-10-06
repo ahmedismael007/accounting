@@ -18,10 +18,10 @@ class InitializeTenantFromHeader
     {
 //        $tenantId = $request->header('X-Tenant');
 // Work
-//        $tenantId = '019995aa-1d30-70bc-bfca-4d8483a67a79';
+        $tenantId = '019995aa-1d30-70bc-bfca-4d8483a67a79';
 
 //        Home
-         $tenantId = '0199982c-b054-7134-9065-d44c274f4fc6';
+//         $tenantId = '0199982c-b054-7134-9065-d44c274f4fc6';
 
         if ($tenantId) {
             try {

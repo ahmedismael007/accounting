@@ -30,9 +30,9 @@ class CreateJournalRequest extends FormRequest
             'journal_line_items.*.account_id' => ['required', 'integer'],
             'journal_line_items.*.description' => ['nullable', 'string'],
             'journal_line_items.*.currency' => ['required', 'string'],
-            'journal_line_items.*.exchange_rate' => ['required', 'numeric'],
-            'journal_line_items.*.debit' => ['required', 'numeric', 'min:0'],
-            'journal_line_items.*.credit' => ['required', 'numeric', 'min:0'],
+            'journal_line_items.*.exchange_rate' => ['sometimes', 'numeric'],
+            'journal_line_items.*.debit' => ['sometimes', 'numeric', 'min:0'],
+            'journal_line_items.*.credit' => ['sometimes', 'numeric', 'min:0'],
             'journal_line_items.*.debit_dc' => ['required', 'numeric'],
             'journal_line_items.*.credit_dc' => ['required', 'numeric'],
 
