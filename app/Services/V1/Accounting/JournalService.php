@@ -55,7 +55,7 @@ class JournalService
                     'credit' => $item['credit'] ?? null,
                     'debit_dc' => $item['debit_dc'],
                     'credit_dc' => $item['credit_dc'],
-                    'tax_rate' => $item['tax_rate'] ?? 0,
+                    'tax_rate_id' => $item['tax_rate'] ?? null,
                     'contact_id' => $item['contact_id'] ?? null,
                     'project_id' => $item['project_id'] ?? null,
                     'branch_id' => $item['branch_id'] ?? null,
@@ -140,7 +140,7 @@ class JournalService
                     'credit' => $item['credit'] ?? null,
                     'debit_dc' => $item['debit_dc'],
                     'credit_dc' => $item['credit_dc'],
-                    'tax_rate' => $item['tax_rate'] ?? 0,
+                    'tax_rate_id' => $item['tax_rate'] ?? null,
                     'contact_id' => $item['contact_id'] ?? null,
                     'project_id' => $item['project_id'] ?? null,
                     'branch_id' => $item['branch_id'] ?? null,
@@ -208,7 +208,9 @@ class JournalService
 
     public function createFromAdjustment(array $data): Model
     {
-        $amount = $data['amount'];
+        $amount = $data['total_adjustment_amount'];
+
+        $cogsAccountID = 53;
 
         $journal = Journal::create([
             'reference' => 'auto',
@@ -221,7 +223,7 @@ class JournalService
             $lines = [
                 [
                     'created_by' => 'SYSTEM',
-                    'account_id' => $data['cogs_account_id'],
+                    'account_id' => $cogsAccountID,
                     'description' => 'Inventory adjustment (Decrease)',
                     'currency' => $data['currency'],
                     'exchange_rate' => 1,
@@ -266,7 +268,7 @@ class JournalService
                 ],
                 [
                     'created_by' => 'SYSTEM',
-                    'account_id' => $data['cogs_account_id'],
+                    'account_id' => $cogsAccountID,
                     'description' => 'Inventory adjustment (Increase)',
                     'currency' => $data['currency'],
                     'exchange_rate' => 1,

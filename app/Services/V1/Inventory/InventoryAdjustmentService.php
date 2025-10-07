@@ -38,11 +38,7 @@ class InventoryAdjustmentService
             $inventoryAccountId = $data['account_id'];
             $cogsAccountId = 53;
 
-            if ($amount < 0) {
 
-            } else {
-
-            }
 
             return $adjustment;
         });

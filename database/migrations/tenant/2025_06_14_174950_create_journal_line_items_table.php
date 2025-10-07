@@ -23,7 +23,7 @@ return new class extends Migration {
             $table->decimal('credit', 15, 2)->nullable()->default(0);
             $table->decimal('debit_dc', 15, 2);
             $table->decimal('credit_dc', 15, 2);
-            $table->decimal('tax_rate_id', 6, 2)->default(0);
+            $table->decimal('tax_rate_id', 6, 2)->nullable();
             $table->foreignId('contact_id')->nullable()->constrained()->nullOnDelete();
             $table->foreignId('project_id')->nullable()->constrained()->nullOnDelete();
             $table->foreignId('branch_id')->nullable()->constrained()->nullOnDelete();
