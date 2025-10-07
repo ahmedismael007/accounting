@@ -12,7 +12,7 @@ class InventoryAdjustmentRepo
         return InventoryAdjustment::query();
     }
 
-    public function findOrFail(string $id): Model
+    public function findOrFail(string $id): InventoryAdjustment
     {
         return InventoryAdjustment::findOrFail($id);
     }

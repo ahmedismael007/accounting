@@ -10,7 +10,9 @@ use Illuminate\Http\Request;
 
 class JournalController extends Controller
 {
-    public function __construct(protected JournalService $service) {}
+    public function __construct(protected JournalService $service)
+    {
+    }
 
     public function index(Request $request)
     {
@@ -36,4 +38,6 @@ class JournalController extends Controller
     {
         return $this->service->destroy($request);
     }
+
+
 }

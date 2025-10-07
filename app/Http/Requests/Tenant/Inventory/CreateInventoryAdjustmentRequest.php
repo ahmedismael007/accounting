@@ -25,7 +25,6 @@ class CreateInventoryAdjustmentRequest extends FormRequest
             'status' => ['required', 'in:DRAFT,APPROVED'],
             'reference' => ['nullable', 'string', 'max:255'],
             'date' => ['required', 'date'],
-            'currency' => ['required', 'string', 'size:3'],
             'warehouse_id' => ['required', 'exists:warehouses,id'],
             'item_id' => ['required', 'exists:items,id'],
             'line_item_description' => ['nullable', 'string'],

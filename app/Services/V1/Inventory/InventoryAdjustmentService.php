@@ -3,6 +3,7 @@
 namespace App\Services\V1\Inventory;
 
 use App\Repositories\V1\Inventory\InventoryAdjustmentRepo;
+use App\Services\V1\Accounting\JournalService;
 use App\Services\V1\Common\QueryBuilderService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -13,6 +14,7 @@ class InventoryAdjustmentService
 {
     public function __construct(
         protected InventoryAdjustmentRepo $repo,
+        protected JournalService          $journalService,
         protected QueryBuilderService     $queryBuilder
     )
     {
@@ -28,17 +30,14 @@ class InventoryAdjustmentService
     {
         return DB::transaction(function () use ($data) {
             $data['total_adjustment_amount'] = $data['qty'] * $data['inventory_value'];
+
             $adjustment = $this->repo->create($data);
 
             $adjustment->update([
                 'adjustment_id' => 'ADJ-' . str_pad($adjustment->id, 4, '0', STR_PAD_LEFT)
             ]);
 
-            $amount = $data['total_adjustment_amount'];
-            $inventoryAccountId = $data['account_id'];
-            $cogsAccountId = 53;
-
-
+            $this->journalService->createFromAdjustment($adjustment->toArray());
 
             return $adjustment;
         });
@@ -54,6 +53,7 @@ class InventoryAdjustmentService
         return DB::transaction(function () use ($data, $id) {
             $adjustment = $this->repo->findOrFail($id);
             $data['total_adjustment_amount'] = $data['qty'] * $data['inventory_value'];
+
             return $this->repo->update($adjustment, $data);
         });
     }

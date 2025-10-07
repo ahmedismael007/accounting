@@ -25,7 +25,6 @@ class UpdateInventoryAdjustmentRequest extends FormRequest
             'status' => ['sometimes', 'in:DRAFT,APPROVED'],
             'reference' => ['sometimes', 'string', 'max:255'],
             'date' => ['sometimes', 'date'],
-            'currency' => ['sometimes', 'string', 'size:3'],
             'warehouse_id' => ['sometimes', 'exists:warehouses,id'],
             'item_id' => ['sometimes', 'exists:items,id'],
             'line_item_description' => ['sometimes', 'string'],

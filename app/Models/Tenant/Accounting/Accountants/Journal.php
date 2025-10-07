@@ -4,12 +4,14 @@ namespace App\Models\Tenant\Accounting\Accountants;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
 
 class Journal extends Model implements HasMedia
 {
     use InteractsWithMedia;
+
     protected $fillable = [
         'type',
         'date',
@@ -25,5 +27,10 @@ class Journal extends Model implements HasMedia
     public function registerMediaCollections(): void
     {
         $this->addMediaCollection('manual_journal')->singleFile();
+    }
+
+    public function journalable(): MorphTo
+    {
+        return $this->morphTo();
     }
 }

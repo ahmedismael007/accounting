@@ -28,8 +28,6 @@ return new class extends Migration {
             $table->foreignId('project_id')->nullable()->constrained()->nullOnDelete();
             $table->foreignId('branch_id')->nullable()->constrained()->nullOnDelete();
             $table->foreignId('cost_center_id')->nullable()->constrained()->nullOnDelete();
-            $table->string('source_type')->default('manual');
-            $table->unsignedBigInteger('source_id')->nullable();
             $table->timestamps();
         });
     }

@@ -15,7 +15,6 @@ return new class extends Migration {
             $table->enum('status', ['DRAFT', 'APPROVED'])->default('DRAFT');
             $table->string('reference')->nullable();
             $table->date('date');
-            $table->string('currency', 3);
             $table->foreignId('warehouse_id')->constrained('warehouses')->cascadeOnDelete();
             $table->foreignId('item_id')->constrained('items')->cascadeOnDelete();
             $table->text('line_item_description')->nullable();

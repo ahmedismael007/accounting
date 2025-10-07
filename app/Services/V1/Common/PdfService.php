@@ -14,7 +14,7 @@ class PdfService
         array     $data,
         string    $file_type,
         string    $id,
-        ?HasMedia $model = null,
+        ?HasMedia $model,
         string    $collection
     ): void
     {

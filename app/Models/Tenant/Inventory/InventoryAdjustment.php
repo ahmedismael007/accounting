@@ -3,15 +3,18 @@
 namespace App\Models\Tenant\Inventory;
 
 use App\Models\Tenant\Accounting\Accountants\Account;
+use App\Models\Tenant\Accounting\Accountants\Journal;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
+use Illuminate\Database\Eloquent\Relations\MorphToMany;
 
-class InventoryAdjustment extends Model {
+class InventoryAdjustment extends Model
+{
     protected $fillable = [
         'status',
         'reference',
         'date',
-        'currency',
         'warehouse_id',
         'item_id',
         'line_item_description',
@@ -20,7 +23,7 @@ class InventoryAdjustment extends Model {
         'account_id',
         'total_adjustment_amount',
         'adjustment_id',
-     ];
+    ];
 
     public function warehouse(): BelongsTo
     {
@@ -35,5 +38,10 @@ class InventoryAdjustment extends Model {
     public function account(): BelongsTo
     {
         return $this->belongsTo(Account::class);
+    }
+
+    public function journalEntries(): MorphMany
+    {
+        return $this->morphMany(Journal::class, 'journalable');
     }
 }

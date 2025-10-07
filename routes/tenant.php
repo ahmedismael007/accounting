@@ -61,6 +61,7 @@ Route::prefix('api/v1')->middleware([InitializeTenantFromHeader::class, SetLocal
     Route::delete('items', [ItemController::class, 'destroy']);
     Route::apiResource('items', ItemController::class);
 
+    Route::delete('inventory-adjustments', [InventoryAdjustmentController::class, 'destroy']);
     Route::apiResource('inventory-adjustments', InventoryAdjustmentController::class);
 
     Route::delete('warehouses', [WarehouseController::class, 'destroy']);

@@ -16,6 +16,7 @@ return new class extends Migration {
             $table->date('date');
             $table->string('reference')->nullable();
             $table->text('notes')->nullable();
+            $table->morphs('journalable');
             $table->timestamps();
         });
     }
