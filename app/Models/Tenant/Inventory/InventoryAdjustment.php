@@ -40,7 +40,7 @@ class InventoryAdjustment extends Model
         return $this->belongsTo(Account::class);
     }
 
-    public function journalEntries(): MorphMany
+    public function journals(): MorphMany
     {
         return $this->morphMany(Journal::class, 'journalable');
     }

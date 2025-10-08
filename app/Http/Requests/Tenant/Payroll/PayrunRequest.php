@@ -30,6 +30,8 @@ class PayrunRequest extends FormRequest
             'description' => ['sometimes', 'nullable', 'string', 'max:1000'],
 
             'amount_to_pay' => [$isUpdate ? 'sometimes' : 'required', 'nullable', 'numeric', 'min:0'],
+            'exchange_rate' => [$isUpdate ? 'sometimes' : 'required', 'numeric', 'min:0'],
+            'amount_to_pay_dc' => [$isUpdate ? 'sometimes' : 'required', 'nullable', 'numeric', 'min:0'],
 
             'employee_id' => [$isUpdate ? 'sometimes' : 'required', 'nullable', 'exists:employees,id'],
             'account_id' => [$isUpdate ? 'sometimes' : 'required', 'exists:accounts,id'],

@@ -19,10 +19,12 @@ return new class extends Migration {
 
             $table->string('currency', 10);
             $table->decimal('amount_paid', 15, 2)->default(0);
+            $table->decimal('exchange_rate', 15, 2)->default(1);
+            $table->decimal('amount_paid_dc', 15, 2)->default(0);
             $table->date('date');
 
             $table->text('description')->nullable();
-            $table->string('reference', 100)->nullable();
+            $table->string('reference')->nullable();
 
             $table->foreignId('branch_id')
                 ->nullable()

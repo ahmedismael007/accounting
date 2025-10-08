@@ -27,6 +27,8 @@ class PayrollPaymentRequest extends FormRequest
             'account_id' => [$isPost ? 'required' : 'sometimes', 'integer', 'exists:accounts,id'],
             'currency' => [$isPost ? 'required' : 'sometimes', 'string', 'max:4'],
             'amount_paid' => [$isPost ? 'required' : 'sometimes', 'numeric', 'min:0'],
+            'exchange_rate' => [$isPost ? 'required' : 'sometimes', 'numeric', 'min:0'],
+            'amount_paid_dc' => [$isPost ? 'required' : 'sometimes', 'numeric', 'min:0'],
             'date' => [$isPost ? 'required' : 'sometimes', 'date'],
             'description' => ['nullable', 'string', 'max:500'],
             'branch_id' => ['nullable', 'integer', 'exists:branches,id'],

@@ -16,6 +16,8 @@ return new class extends Migration {
             $table->string('currency', 4);
             $table->text('description')->nullable();
             $table->decimal('amount_to_pay', 15, 2)->default(0);
+            $table->decimal('exchange_rate', 15, 2)->default(1);
+            $table->decimal('amount_to_pay_dc', 15, 2)->default(0);
             $table->decimal('payments', 15, 2)->default(0);
             $table->decimal('payslip_amount', 15, 2)->default(0);
 

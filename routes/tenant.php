@@ -18,6 +18,7 @@ use App\Http\Controllers\Tenant\Inventory\ItemController;
 use App\Http\Controllers\Tenant\Inventory\WarehouseController;
 use App\Http\Controllers\Tenant\Payroll\EmployeeController;
 use App\Http\Controllers\Tenant\Payroll\PayrollController;
+use App\Http\Controllers\Tenant\Payroll\PayrollPaymentController;
 use App\Http\Controllers\Tenant\Payroll\PayRunController;
 use App\Http\Middleware\InitializeTenantFromHeader;
 use App\Http\Middleware\SetLocaleFromHeader;
@@ -76,5 +77,8 @@ Route::prefix('api/v1')->middleware([InitializeTenantFromHeader::class, SetLocal
 
     Route::delete('payruns', [PayRunController::class, 'destroy']);
     Route::apiResource('payruns', PayRunController::class);
+
+    Route::delete('payroll-payments', [PayrollPaymentController::class, 'destroy']);
+    Route::apiResource('payroll-payments', PayrollPaymentController::class);
 
 });

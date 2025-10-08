@@ -25,6 +25,7 @@ class CreateJournalRequest extends FormRequest
             'date' => ['required', 'date'],
             'reference' => ['nullable', 'string'],
             'notes' => ['nullable', 'string'],
+            'account_id' => ['required', 'exists:accounts,id'],
             'journal_line_items' => ['required', 'array', 'min:1'],
 
             'journal_line_items.*.account_id' => ['required', 'integer'],

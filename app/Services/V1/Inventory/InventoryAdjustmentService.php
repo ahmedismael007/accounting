@@ -37,7 +37,7 @@ class InventoryAdjustmentService
                 'adjustment_id' => 'ADJ-' . str_pad($adjustment->id, 4, '0', STR_PAD_LEFT)
             ]);
 
-            $this->journalService->createFromAdjustment($adjustment->toArray());
+            $this->journalService->createFromAdjustment($adjustment);
 
             return $adjustment;
         });

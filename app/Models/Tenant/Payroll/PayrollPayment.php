@@ -11,6 +11,8 @@ class PayrollPayment extends Model
         'account_id',
         'currency',
         'amount_paid',
+        'exchange_rate',
+        'amount_paid_dc',
         'date',
         'description',
         'branch_id',

@@ -21,6 +21,8 @@ class PayRun extends Model
         'description',
         'account_id',
         'amount_to_pay',
+        'exchange_rate',
+        'amount_to_pay_dc',
         'cost_center_id',
         'project_id',
         'branch_id',
