@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Tenant\Accounting\Branches;
+namespace App\Http\Controllers\Tenant\Accounting\Branch;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Tenant\Accounting\Branches\CreateBranchRequest;

@@ -1,17 +1,17 @@
 <?php
 
-namespace App\Http\Controllers\Tenant\Accounting\Contacts;
+namespace App\Http\Controllers\Tenant\Accounting\Customer;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Tenant\Accounting\Contacts\CreateContactRequest;
-use App\Http\Requests\Tenant\Accounting\Contacts\UpdateContactRequest;
-use App\Services\V1\Accounting\ContactService;
+use App\Http\Requests\Tenant\Accounting\Customer\CreateCustomerRequest;
+use App\Http\Requests\Tenant\Accounting\Customer\UpdateCustomerRequest;
+use App\Services\V1\Accounting\CustomerService;
 use Illuminate\Http\Request;
 
-class ContactController extends Controller
+class CustomerController extends Controller
 {
     public function __construct(
-        protected ContactService $service
+        protected CustomerService $service
     )
     {
     }
@@ -22,7 +22,7 @@ class ContactController extends Controller
         return response()->json($data, 200);
     }
 
-    public function store(CreateContactRequest $request)
+    public function store(CreateCustomerRequest $request)
     {
         $this->service->store($request->validated());
         return response()->json(['message' => trans('crud.created')], 201);
@@ -34,7 +34,7 @@ class ContactController extends Controller
         return response()->json(['data' => $data], 200);
     }
 
-    public function update(UpdateContactRequest $request, string $id)
+    public function update(UpdateCustomerRequest $request, string $id)
     {
         $this->service->update($request->validated(), $id);
         return response()->json(['message' => trans('crud.updated')], 200);

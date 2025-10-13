@@ -1,16 +1,17 @@
 <?php
 
-namespace App\Http\Controllers\Tenant\Accounting\Accountants;
+namespace App\Http\Controllers\Tenant\Accounting\Accountant;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Tenant\Accounting\Accountants\CreateAccountRequest;
-use App\Http\Requests\Tenant\Accounting\Accountants\UpdateAccountRequest;
-use App\Services\V1\Accounting\AccountService;
+use App\Http\Requests\Tenant\Accounting\Accountants\CreateTaxRateRequest;
+use App\Http\Requests\Tenant\Accounting\Accountants\UpdateTaxRateRequest;
+use App\Services\V1\Accounting\TaxRateService;
 use Illuminate\Http\Request;
+use function dd;
 
-class AccountController extends Controller
+class TaxRateController extends Controller
 {
-    public function __construct(protected AccountService $accountService)
+    public function __construct(protected TaxRateService $taxRateService)
     {
     }
 
@@ -19,7 +20,7 @@ class AccountController extends Controller
      */
     public function index(Request $request)
     {
-        $data = $this->accountService->index($request);
+        $data = $this->taxRateService->index($request);
 
         return response()->json($data, 200);
     }
@@ -27,12 +28,12 @@ class AccountController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(CreateAccountRequest $request)
+    public function store(CreateTaxRateRequest $request)
     {
         $validated = $request->validated();
 
         try {
-            $this->accountService->store($validated);
+            $this->taxRateService->store($validated);
         } catch (\Exception $exception) {
             return response()->json(['message' => $exception->getMessage()], 400);
         }
@@ -45,7 +46,7 @@ class AccountController extends Controller
      */
     public function show(string $id)
     {
-        $data = $this->accountService->show($id);
+        $data = $this->taxRateService->show($id);
 
         return response()->json(['data' => $data], 200);
     }
@@ -53,17 +54,16 @@ class AccountController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateAccountRequest $request, string $id)
+    public function update(UpdateTaxRateRequest $request, string $id)
     {
         $validated = $request->validated();
-
         try {
-            $this->accountService->update($id, $validated);
+            $this->taxRateService->update($validated, $id);
         } catch (\Exception $exception) {
             return response()->json(['message' => $exception->getMessage()], 400);
         }
 
-        return response()->json(['message' => 'crud.updated'], 200);
+        return response()->json(['message' => trans('crud.updated')], 200);
     }
 
     /**
@@ -74,11 +74,11 @@ class AccountController extends Controller
         $ids = $request->input('ids');
 
         try {
-            $this->accountService->destroy($ids);
+            $this->taxRateService->destroy($ids);
         } catch (\Exception $exception) {
             return response()->json(['message' => $exception->getMessage()], 400);
         }
 
-        return response()->json(['message' => 'crud.deleted'], 200);
+        return response()->json(['message' => trans('crud.deleted')], 200);
     }
 }

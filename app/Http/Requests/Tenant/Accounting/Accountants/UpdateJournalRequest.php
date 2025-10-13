@@ -25,8 +25,7 @@ class UpdateJournalRequest extends FormRequest
             'date' => ['sometimes', 'date'],
             'reference' => ['sometimes', 'string'],
             'notes' => ['sometimes', 'string'],
-            'account_id' => ['sometimes', 'exists:accounts,id'],
-
+ 
             'journal_line_items' => ['sometimes', 'array', 'min:1'],
 
             'journal_line_items.*.account_id' => ['sometimes', 'integer'],

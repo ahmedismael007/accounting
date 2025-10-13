@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Tenant\Accounting\Accountants;
+namespace App\Http\Controllers\Tenant\Accounting\Accountant;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Tenant\Accounting\Accountants\CreateJournalRequest;

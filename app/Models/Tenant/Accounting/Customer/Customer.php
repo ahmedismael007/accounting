@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Models\Tenant\Accounting\Contacts;
+namespace App\Models\Tenant\Accounting\Customer;
 
 use App\Models\Tenant\Accounting\Accountants\JournalLineItem;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
-class Contact extends Model
+class Customer extends Model
 {
     protected $fillable = [
         'name',

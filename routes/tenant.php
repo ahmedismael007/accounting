@@ -4,15 +4,16 @@ declare(strict_types=1);
 
 use App\Http\Controllers\Central\Tenant\TenantController;
 use App\Http\Controllers\Central\User\UserController;
-use App\Http\Controllers\Tenant\Accounting\Accountants\AccountController;
-use App\Http\Controllers\Tenant\Accounting\Accountants\JournalController;
-use App\Http\Controllers\Tenant\Accounting\Accountants\TaxRateController;
-use App\Http\Controllers\Tenant\Accounting\BankAccounts\BankAccountController;
-use App\Http\Controllers\Tenant\Accounting\Branches\BranchController;
+use App\Http\Controllers\Tenant\Accounting\Accountant\AccountController;
+use App\Http\Controllers\Tenant\Accounting\Accountant\JournalController;
+use App\Http\Controllers\Tenant\Accounting\Accountant\TaxRateController;
+use App\Http\Controllers\Tenant\Accounting\BankAccount\BankAccountController;
+use App\Http\Controllers\Tenant\Accounting\Branch\BranchController;
 use App\Http\Controllers\Tenant\Accounting\CostCenter\CostCenterController;
-use App\Http\Controllers\Tenant\Accounting\Contacts\ContactController;
+use App\Http\Controllers\Tenant\Accounting\Customer\CustomerController;
 use App\Http\Controllers\Tenant\Accounting\FixedAssets\FixedAssetController;
 use App\Http\Controllers\Tenant\Accounting\Projects\ProjectController;
+use App\Http\Controllers\Tenant\Accounting\Sales\QuoteController;
 use App\Http\Controllers\Tenant\Inventory\InventoryAdjustmentController;
 use App\Http\Controllers\Tenant\Inventory\ItemController;
 use App\Http\Controllers\Tenant\Inventory\WarehouseController;
@@ -52,11 +53,14 @@ Route::prefix('api/v1')->middleware([InitializeTenantFromHeader::class, SetLocal
     Route::delete('fixed-assets', [FixedAssetController::class, 'destroy']);
     Route::apiResource('fixed-assets', FixedAssetController::class);
 
-    Route::delete('contacts', [ContactController::class, 'destroy']);
-    Route::apiResource('contacts', ContactController::class);
+    Route::delete('customers', [CustomerController::class, 'destroy']);
+    Route::apiResource('customers', CustomerController::class);
 
     Route::delete('journals', [JournalController::class, 'destroy']);
     Route::apiResource('journals', JournalController::class);
+
+    Route::delete('quotes-and-proformas', [QuoteController::class, 'destroy']);
+    Route::apiResource('quotes-and-proformas', QuoteController::class);
 
     // Inventory Management
     Route::delete('items', [ItemController::class, 'destroy']);

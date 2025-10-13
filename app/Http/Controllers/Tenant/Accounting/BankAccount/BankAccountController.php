@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Tenant\Accounting\BankAccounts;
+namespace App\Http\Controllers\Tenant\Accounting\BankAccount;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Tenant\Accounting\BankAccounts\CreateBankAccountRequest;

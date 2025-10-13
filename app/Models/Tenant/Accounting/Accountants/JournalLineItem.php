@@ -4,7 +4,7 @@ namespace App\Models\Tenant\Accounting\Accountants;
 
 use App\Models\Tenant\Accounting\Branches\Branch;
 use App\Models\Tenant\Accounting\CostCenter\CostCenter;
-use App\Models\Tenant\Accounting\Contacts\Contact;
+use App\Models\Tenant\Accounting\Customer\Customer;
 use App\Models\Tenant\Accounting\Projects\Project;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -44,7 +44,7 @@ class JournalLineItem extends Model
 
     public function contact(): BelongsTo
     {
-        return $this->belongsTo(Contact::class);
+        return $this->belongsTo(Customer::class);
     }
 
     public function project(): BelongsTo

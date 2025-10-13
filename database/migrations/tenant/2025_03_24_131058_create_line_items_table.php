@@ -13,14 +13,14 @@ return new class extends Migration {
         Schema::create('line_items', function (Blueprint $table) {
             $table->id();
             $table->morphs('line_itemable');
+            
             $table->text('description');
-            $table->foreignId('account_id')->constrained();
-            $table->integer('quantity');
-            $table->decimal('price', 12, 2);
-            $table->integer('discount')->nullable();
-            $table->foreignId('item_id')->nullable()->constrained();
-            $table->foreignId('cost_center_id')->nullable()->constrained();
-            $table->foreignId('tax_rate_id')->nullable()->constrained();
+            $table->decimal('quantity', 15, 2);
+            $table->decimal('price', 15, 2);
+            $table->foreignId('item_id')->nullable()->constrained('items')->cascadeOnUpdate()->restrictOnDelete();
+            $table->foreignId('tax_rate_id')->nullable()->constrained()->cascadeOnUpdate()->restrictOnDelete();
+            $table->foreignId('cost_center_id')->nullable()->constrained('cost_centers')->cascadeOnUpdate()->restrictOnDelete();
+            $table->decimal('discount_percent', 15, 2)->default(0);
             $table->timestamps();
         });
     }

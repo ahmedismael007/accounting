@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Requests\Tenant\Accounting\Contacts;
+namespace App\Http\Requests\Tenant\Accounting\Customer;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class UpdateContactRequest extends FormRequest
+class CreateCustomerRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -22,11 +22,11 @@ class UpdateContactRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => ['sometimes', 'string', 'max:255'],
+            'name' => ['required', 'string', 'max:255'],
             'phone' => ['sometimes', 'string', 'max:255'],
             'email' => ['sometimes', 'string', 'max:255'],
             'country' => ['sometimes', 'string', 'max:255'],
-            'is_vat_registered' => ['sometimes', 'boolean'],
+            'is_vat_registered' => ['required', 'boolean'],
             'tax_number' => ['sometimes', 'string', 'max:255'],
             'building_number' => ['sometimes', 'string', 'max:255'],
             'street' => ['sometimes', 'string', 'max:255'],

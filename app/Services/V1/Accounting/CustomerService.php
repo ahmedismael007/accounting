@@ -2,16 +2,16 @@
 
 namespace App\Services\V1\Accounting;
 
-use App\Repositories\V1\Accounting\ContactRepo;
+use App\Repositories\V1\Accounting\CustomerRepo;
 use App\Services\V1\Common\QueryBuilderService;
 use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Collection;
 
-class ContactService
+class CustomerService
 {
     public function __construct(
-        protected ContactRepo         $repo,
+        protected CustomerRepo        $repo,
         protected QueryBuilderService $queryBuilder
     )
     {
