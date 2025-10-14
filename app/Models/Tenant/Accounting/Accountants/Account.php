@@ -3,11 +3,13 @@
 namespace App\Models\Tenant\Accounting\Accountants;
 
 use App\Models\Tenant\Accounting\BankAccounts\BankAccount;
+use App\Models\Tenant\Accounting\Discount\Discount;
 use App\Models\Tenant\Inventory\InventoryAdjustment;
 use App\Models\Tenant\Payroll\Payroll;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\MorphOne;
 
 class Account extends Model
 {
@@ -26,6 +28,13 @@ class Account extends Model
         'is_payment_enabled',
     ];
 
+    protected $casts = [
+        'name' => 'array',
+        'show_in_expense_claims' => 'boolean',
+        'is_locked' => 'boolean',
+        'is_system' => 'boolean',
+        'is_payment_enabled' => 'boolean',
+    ];
 
     public function parent()
     {
@@ -56,12 +65,4 @@ class Account extends Model
     {
         return $this->hasMany(Payroll::class);
     }
-
-    protected $casts = [
-        'name' => 'array',
-        'show_in_expense_claims' => 'boolean',
-        'is_locked' => 'boolean',
-        'is_system' => 'boolean',
-        'is_payment_enabled' => 'boolean',
-    ];
 }

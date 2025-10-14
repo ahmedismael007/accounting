@@ -1,32 +1,30 @@
 <?php
 
-namespace App\Models\Tenant\Accounting\LineItem;
+namespace App\Models\Tenant\Accounting\Discount;
 
+use App\Models\Tenant\Accounting\Accountants\Account;
 use App\Models\Tenant\Accounting\Accountants\TaxRate;
 use App\Models\Tenant\Accounting\CostCenter\CostCenter;
-use App\Models\Tenant\Inventory\Item;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\MorphTo;
 
-class LineItem extends Model
+class Discount extends Model
 {
     protected $fillable = [
-        'description',
-        'quantity',
-        'price',
-        'item_id',
+        'amount',
+        'account_id',
         'tax_rate_id',
         'cost_center_id',
-        'discount_percent',
     ];
 
-    public function lineItemable()
+    public function discountable(): MorphTo
     {
         return $this->morphTo();
     }
 
-    public function item()
+    public function account()
     {
-        return $this->belongsTo(Item::class);
+        return $this->belongsTo(Account::class);
     }
 
     public function taxRate()
@@ -38,5 +36,4 @@ class LineItem extends Model
     {
         return $this->belongsTo(CostCenter::class);
     }
-
 }

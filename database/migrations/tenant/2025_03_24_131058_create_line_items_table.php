@@ -13,7 +13,6 @@ return new class extends Migration {
         Schema::create('line_items', function (Blueprint $table) {
             $table->id();
             $table->morphs('line_itemable');
-            
             $table->text('description');
             $table->decimal('quantity', 15, 2);
             $table->decimal('price', 15, 2);
