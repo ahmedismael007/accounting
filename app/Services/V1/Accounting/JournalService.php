@@ -3,6 +3,7 @@
 namespace App\Services\V1\Accounting;
 
 use App\Models\Tenant\Accounting\Accountants\Journal;
+use App\Models\Tenant\Accounting\Sales\Invoice;
 use App\Repositories\V1\Accounting\JournalRepo;
 use App\Services\V1\Common\PdfService;
 use App\Services\V1\Common\QueryBuilderService;
@@ -12,6 +13,14 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Throwable;
 use App\Models\Tenant\Inventory\InventoryAdjustment;
+use function abs;
+use function collect;
+use function is_array;
+use function now;
+use function response;
+use function tenant;
+use function trans;
+use function trim;
 
 class JournalService
 {
@@ -216,7 +225,7 @@ class JournalService
             'reference' => 'auto',
             'date' => now(),
             'notes' => $adjustment->notes ?? null,
-            'type' => $adjustment->type ?? 'auto',
+            'type' => 'auto',
         ]);
 
         $currency = $adjustment->currency ?? ($adjustment->getAttribute('currency') ?: 'USD');
@@ -281,5 +290,223 @@ class JournalService
         $journal->journal_line_items()->createMany($lines);
 
         return $journal;
+    }
+
+    public function createFromInvoice(Invoice $invoice): Journal
+    {
+        $currency = $invoice->currency;
+        $exchangeRate = $invoice->exchange_rate ?? 1;
+        $taxAmountType = $invoice->tax_amount_type; // ['tax_included', 'tax_excluded']
+
+
+        return DB::transaction(function () use ($invoice, $currency, $exchangeRate, $taxAmountType) {
+            $customerAccountId = 7; // Accounts Receivable
+            $salesAccountID = 44; // Sales Revenue
+            $vatAccountID = 28; // VAT Payable
+
+            // === 1. Create Journal ===
+            $journal = $invoice->journals()->create([
+                'reference' => $invoice->invoice_number ?? 'auto',
+                'date' => $invoice->date,
+                'notes' => $invoice->notes,
+                'type' => 'auto',
+            ]);
+
+            // === 2. Build Lines ===
+            $lines = [];
+
+            // (a) Invoice line items
+
+            foreach ($invoice->lineItems as $lineItem) {
+                $lineItemSubTotal = $lineItem->quantity * $lineItem->price;
+                $discount = ($lineItem->discount ?? 0) * $lineItemSubTotal / 100;
+                $lineItemSubTotalAfterDiscount = $lineItemSubTotal - $discount;
+
+                $taxRate = $lineItem->taxRate?->tax_rate ?? 0;
+                $vat = 0;
+
+                if ($taxAmountType === 'tax_excluded') {
+                    // VAT is added on top
+                    $vat = $lineItemSubTotalAfterDiscount * ($taxRate / 100);
+                } elseif ($taxAmountType === 'tax_included') {
+                    // VAT is part of total price
+                    $vat = $lineItemSubTotalAfterDiscount - ($lineItemSubTotalAfterDiscount / (1 + ($taxRate / 100)));
+                }
+
+                $total = $lineItemSubTotalAfterDiscount + $vat;
+
+                // === (a.1) Debit Accounts Receivable ===
+                $lines[] = [
+                    'created_by' => 'SYSTEM',
+                    'type' => 'auto',
+                    'account_id' => $customerAccountId,
+                    'description' => 'Accounts Receivable - ' . $invoice->invoice_number,
+                    'currency' => $currency,
+                    'exchange_rate' => $exchangeRate,
+                    'debit' => $total,
+                    'credit' => 0,
+                    'debit_dc' => $total * $exchangeRate,
+                    'credit_dc' => 0,
+                    'customer_id' => $invoice->customer_id,
+                    'project_id' => $invoice->project_id,
+                    'cost_center_id' => $lineItem->cost_center_id,
+                ];
+
+                // === (a.2) Credit Sales Revenue ===
+                $salesAmount = $lineItemSubTotalAfterDiscount - ($taxAmountType === 'tax_included' ? $vat : 0);
+
+                $lines[] = [
+                    'created_by' => 'SYSTEM',
+                    'type' => 'auto',
+                    'account_id' => $salesAccountID,
+                    'description' => 'Sales Revenue - ' . $invoice->invoice_number,
+                    'currency' => $currency,
+                    'exchange_rate' => $exchangeRate,
+                    'debit' => 0,
+                    'credit' => $salesAmount,
+                    'debit_dc' => 0,
+                    'credit_dc' => $salesAmount * $exchangeRate,
+                    'customer_id' => $invoice->customer_id,
+                    'project_id' => $invoice->project_id,
+                    'cost_center_id' => $lineItem->cost_center_id,
+                ];
+
+                // === (a.3) Credit VAT Payable (if any) ===
+                if ($vat > 0) {
+                    $lines[] = [
+                        'created_by' => 'SYSTEM',
+                        'type' => 'auto',
+                        'account_id' => $vatAccountID,
+                        'description' => 'VAT Payable - ' . $invoice->invoice_number,
+                        'currency' => $currency,
+                        'exchange_rate' => $exchangeRate,
+                        'debit' => 0,
+                        'credit' => $vat,
+                        'debit_dc' => 0,
+                        'credit_dc' => $vat * $exchangeRate,
+                        'customer_id' => $invoice->customer_id,
+                        'project_id' => $invoice->project_id,
+                        'cost_center_id' => $lineItem->cost_center_id,
+                    ];
+                }
+            }
+
+            // (b) Discount
+            $discount = $invoice->discount;
+
+            if ($discount && $discount->amount > 0 && $discount->account_id) {
+                $discountAmount = $discount->amount;
+                $discountTaxRate = $discount->taxRate?->tax_rate ?? 0;
+                $discountVat = 0;
+
+                // === Calculate VAT on discount if applicable ===
+                if ($discountTaxRate > 0) {
+                    $discountVat = $discountAmount * ($discountTaxRate / 100);
+                }
+
+                // (1) Debit Sales Discount (Expense)
+                $lines[] = [
+                    'created_by' => 'SYSTEM',
+                    'type' => 'auto',
+                    'account_id' => $discount->account_id,
+                    'description' => 'Sales Discount - ' . $invoice->invoice_number,
+                    'currency' => $currency,
+                    'exchange_rate' => $exchangeRate,
+                    'debit' => $discountAmount,
+                    'credit' => 0,
+                    'debit_dc' => $discountAmount * $exchangeRate,
+                    'credit_dc' => 0,
+                    'customer_id' => $invoice->customer_id,
+                    'project_id' => $invoice->project_id,
+                    'branch_id' => $invoice->branch_id,
+                    'cost_center_id' => $invoice->cost_center_id,
+                ];
+
+                // (2) Debit VAT Payable (if VAT applies to discount)
+                if ($discountVat > 0) {
+                    $lines[] = [
+                        'created_by' => 'SYSTEM',
+                        'type' => 'auto',
+                        'account_id' => $vatAccountID,
+                        'description' => 'VAT on Sales Discount - ' . $invoice->invoice_number,
+                        'currency' => $currency,
+                        'exchange_rate' => $exchangeRate,
+                        'debit' => $discountVat,
+                        'credit' => 0,
+                        'debit_dc' => $discountVat * $exchangeRate,
+                        'credit_dc' => 0,
+                        'customer_id' => $invoice->customer_id,
+                        'project_id' => $invoice->project_id,
+                        'branch_id' => $invoice->branch_id,
+                        'cost_center_id' => $invoice->cost_center_id,
+                    ];
+                }
+
+                // (3) Credit Accounts Receivable (Customer)
+                $totalDiscountCredit = $discountAmount + $discountVat;
+
+                $lines[] = [
+                    'created_by' => 'SYSTEM',
+                    'type' => 'auto',
+                    'account_id' => $customerAccountId,
+                    'description' => 'Sales Discount - ' . $invoice->invoice_number,
+                    'currency' => $currency,
+                    'exchange_rate' => $exchangeRate,
+                    'debit' => 0,
+                    'credit' => $totalDiscountCredit,
+                    'debit_dc' => 0,
+                    'credit_dc' => $totalDiscountCredit * $exchangeRate,
+                    'customer_id' => $invoice->customer_id,
+                    'project_id' => $invoice->project_id,
+                    'branch_id' => $invoice->branch_id,
+                    'cost_center_id' => $invoice->cost_center_id,
+                ];
+            }
+
+
+            // (c) Retention
+            if ($invoice->retention->amount > 0 && $invoice->retention?->account_id) {
+                // Debit
+                $lines[] = [
+                    'created_by' => 'SYSTEM',
+                    'type' => 'auto',
+                    'account_id' => $invoice->retention->account_id,
+                    'description' => 'Retention - ' . $invoice->invoice_number,
+                    'currency' => $currency,
+                    'exchange_rate' => $exchangeRate,
+                    'debit' => $invoice->retention->amount,
+                    'credit' => 0,
+                    'debit_dc' => $invoice->retention->amount * $exchangeRate,
+                    'credit_dc' => 0,
+                    'customer_id' => $invoice->customer_id,
+                    'project_id' => $invoice->project_id,
+                    'branch_id' => $invoice->branch_id,
+                    'cost_center_id' => $invoice->cost_center_id,
+                ];
+
+                // Credit
+                $lines[] = [
+                    'created_by' => 'SYSTEM',
+                    'type' => 'auto',
+                    'account_id' => $customerAccountId,
+                    'description' => 'Retention - ' . $invoice->invoice_number,
+                    'currency' => $currency,
+                    'exchange_rate' => $exchangeRate,
+                    'debit' => 0,
+                    'credit' => $invoice->retention->amount,
+                    'debit_dc' => 0,
+                    'credit_dc' => $invoice->retention->amount * $exchangeRate,
+                    'customer_id' => $invoice->customer_id,
+                    'project_id' => $invoice->project_id,
+                    'branch_id' => $invoice->branch_id,
+                    'cost_center_id' => $invoice->cost_center_id,
+                ];
+            }
+
+            // === 3. Persist ===
+            $journal->journal_line_items()->createMany($lines);
+
+            return $journal;
+        });
     }
 }

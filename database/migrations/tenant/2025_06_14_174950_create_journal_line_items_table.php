@@ -12,22 +12,22 @@ return new class extends Migration {
     {
         Schema::create('journal_line_items', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('journal_id')->constrained()->cascadeOnDelete();
-            $table->foreignId('account_id')->nullable()->constrained()->nullOnDelete();
-            $table->text('created_by');
+            $table->foreignId('journal_id')->constrained()->cascadeOnUpdate()->cascadeOnDelete();
+            $table->foreignId('account_id')->nullable()->constrained()->cascadeOnUpdate()->restrictOnDelete();
+            $table->text('created_by')->default('SYSTEM');
             $table->enum('type', ['manual', 'auto'])->default('manual');
             $table->text('description')->nullable();
             $table->string('currency');
             $table->decimal('exchange_rate', 15, 2)->default(1);
             $table->decimal('debit', 15, 2)->nullable()->default(0);
             $table->decimal('credit', 15, 2)->nullable()->default(0);
-            $table->decimal('debit_dc', 15, 2);
-            $table->decimal('credit_dc', 15, 2);
-            $table->decimal('tax_rate_id', 6, 2)->nullable();
-            $table->foreignId('contact_id')->nullable()->constrained()->nullOnDelete();
-            $table->foreignId('project_id')->nullable()->constrained()->nullOnDelete();
-            $table->foreignId('branch_id')->nullable()->constrained()->nullOnDelete();
-            $table->foreignId('cost_center_id')->nullable()->constrained()->nullOnDelete();
+            $table->decimal('debit_dc', 15, 2)->nullable()->default(0);
+            $table->decimal('credit_dc', 15, 2)->nullable()->default(0);
+            $table->foreignId('tax_rate_id')->nullable()->constrained()->cascadeOnUpdate()->restrictOnDelete();
+            $table->foreignId('customer_id')->nullable()->constrained()->cascadeOnUpdate()->restrictOnDelete();
+            $table->foreignId('project_id')->nullable()->constrained()->cascadeOnUpdate()->restrictOnDelete();
+            $table->foreignId('branch_id')->nullable()->constrained()->cascadeOnUpdate()->restrictOnDelete();
+            $table->foreignId('cost_center_id')->nullable()->constrained()->cascadeOnUpdate()->restrictOnDelete();
             $table->timestamps();
         });
     }

@@ -13,6 +13,7 @@ use App\Http\Controllers\Tenant\Accounting\CostCenter\CostCenterController;
 use App\Http\Controllers\Tenant\Accounting\Customer\CustomerController;
 use App\Http\Controllers\Tenant\Accounting\FixedAssets\FixedAssetController;
 use App\Http\Controllers\Tenant\Accounting\Projects\ProjectController;
+use App\Http\Controllers\Tenant\Accounting\Sales\InvoiceController;
 use App\Http\Controllers\Tenant\Accounting\Sales\QuoteController;
 use App\Http\Controllers\Tenant\Inventory\InventoryAdjustmentController;
 use App\Http\Controllers\Tenant\Inventory\ItemController;
@@ -61,6 +62,10 @@ Route::prefix('api/v1')->middleware([InitializeTenantFromHeader::class, SetLocal
 
     Route::delete('quotes-and-proformas', [QuoteController::class, 'destroy']);
     Route::apiResource('quotes-and-proformas', QuoteController::class);
+
+    // Sales
+    Route::delete('invoices', [InvoiceController::class, 'destroy']);
+    Route::apiResource('invoices', InvoiceController::class);
 
     // Inventory Management
     Route::delete('items', [ItemController::class, 'destroy']);

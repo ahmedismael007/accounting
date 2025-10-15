@@ -24,7 +24,7 @@ class JournalLineItem extends Model
         'debit_dc',
         'credit_dc',
         'tax_rate_id',
-        'contact_id',
+        'customer_id',
         'project_id',
         'branch_id',
         'cost_center_id',
@@ -42,7 +42,7 @@ class JournalLineItem extends Model
         return $this->belongsTo(Account::class);
     }
 
-    public function contact(): BelongsTo
+    public function customer(): BelongsTo
     {
         return $this->belongsTo(Customer::class);
     }

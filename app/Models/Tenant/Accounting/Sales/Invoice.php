@@ -2,6 +2,7 @@
 
 namespace App\Models\Tenant\Accounting\Sales;
 
+use App\Models\Tenant\Accounting\Accountants\Journal;
 use App\Models\Tenant\Accounting\Customer\Customer;
 use App\Models\Tenant\Accounting\Discount\Discount;
 use App\Models\Tenant\Accounting\LineItem\LineItem;
@@ -9,6 +10,8 @@ use App\Models\Tenant\Accounting\Projects\Project;
 use App\Models\Tenant\Accounting\Retention\Retention;
 use App\Models\Tenant\Inventory\Warehouse;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\MorphOne;
 
 class Invoice extends Model
 {
@@ -16,6 +19,7 @@ class Invoice extends Model
         'customer_id',
         'invoice_number',
         'currency',
+        'exchange_rate',
         'date',
         'due_date',
         'purchase_order',
@@ -25,10 +29,14 @@ class Invoice extends Model
         'tax_amount_type',
         'notes',
         'subtotal',
-        'discount',
+        'discount_exec_vat',
         'vat',
         'total',
         'net_due',
+    ];
+
+    protected $casts = [
+        'discount' => 'array',
     ];
 
     /** Relationships */
@@ -61,5 +69,10 @@ class Invoice extends Model
     public function retention()
     {
         return $this->morphOne(Retention::class, 'retentionable');
+    }
+
+    public function journals(): MorphOne
+    {
+        return $this->morphOne(Journal::class, 'journalable');
     }
 }

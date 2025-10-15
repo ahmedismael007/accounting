@@ -20,13 +20,14 @@ class InvoiceRequest extends FormRequest
             'customer_id' => [$isCreate ? 'required' : 'sometimes', 'exists:customers,id'],
             'invoice_number' => ['sometimes', 'string', 'max:255'],
             'currency' => [$isCreate ? 'required' : 'sometimes', 'string', 'max:10'],
+            'exchange_rate' => [$isCreate ? 'required' : 'sometimes', 'numeric'],
             'date' => [$isCreate ? 'required' : 'sometimes', 'date'],
             'due_date' => [$isCreate ? 'required' : 'sometimes', 'date', 'after_or_equal:date'],
             'purchase_order' => ['nullable', 'string', 'max:255'],
             'reference' => ['nullable', 'string', 'max:255'],
             'project_id' => ['sometimes', 'exists:projects,id'],
             'warehouse_id' => ['sometimes', 'exists:warehouses,id'],
-            'tax_amount_type' => [$isCreate ? 'required' : 'sometimes', 'in:tax_included,tax_excluded'],
+            'tax_amount_type' => ['sometimes', 'in:tax_included,tax_excluded'],
             'notes' => ['nullable', 'string'],
 
             // === Line Items ===
@@ -52,11 +53,11 @@ class InvoiceRequest extends FormRequest
             'retention.account_id' => ['required_with:retention', 'exists:accounts,id'],
 
             // === Totals ===
-            'subtotal' => [$isCreate ? 'required' : 'sometimes', 'numeric', 'min:0'],
-            'discount_amount' => ['nullable', 'numeric', 'min:0'],
+            'subtotal' => ['sometimes', 'numeric', 'min:0'],
+            'discount_exec_vat' => ['nullable', 'numeric', 'min:0'],
             'vat' => ['nullable', 'numeric', 'min:0'],
-            'total' => [$isCreate ? 'required' : 'sometimes', 'numeric', 'min:0'],
-            'net_due' => [$isCreate ? 'required' : 'sometimes', 'numeric', 'min:0'],
+            'total' => ['sometimes', 'numeric', 'min:0'],
+            'net_due' => ['sometimes', 'numeric', 'min:0'],
         ];
     }
 }
